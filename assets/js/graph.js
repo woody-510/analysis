@@ -531,6 +531,8 @@
       xxd: { label: 'x²D(x) の模式図', expr: 'x^2; 0', a: '-1.2', b: '1.2', dashed: true, names: ['有理数での値 x²', '無理数での値 0'] },
       mvtF: { label: 'f = x³、弦、その差 F', expr: 'x^3; 3x+2; x^3-(3x+2)', a: '-1', b: '2', names: ['f(x) = x³', '弦 y = 3x + 2', 'F(x) = f(x) − 弦'] },
       inv01: { label: 'y = 1/x on (0, 1]', expr: '1/x', a: '0.04', b: '1', names: ['y = 1/x'] },
+      ramps: { label: 'f₁, f₂, f₄（坂が細くなる連続関数）', expr: '(abs(2-2x)-abs(1-2x)+1)/2; (abs(3-4x)-abs(2-4x)+1)/2; (abs(5-8x)-abs(4-8x)+1)/2', a: '0', b: '1', names: ['f₁', 'f₂', 'f₄'] },
+      picard: { label: 'u′ = u の逐次近似', expr: 'exp(x); 1+x; 1+x+x^2/2; 1+x+x^2/2+x^3/6', a: '0', b: '2.5', names: ['解 eᵗ', 'u₁ = 1 + t', 'u₂', 'u₃'] },
       ftc: { label: 'f = 階段関数、F(x) = ∫₀ˣ f', expr: 'step(x-1); (x-1)step(x-1)', a: '0', b: '2', names: ['f(t)（x = 1 で跳ぶ）', 'F(x) = ∫₀ˣ f(t) dt（x = 1 で折れる）'] },
     },
     fields: [
@@ -546,7 +548,7 @@
       const pad = (b - a) * 0.04;
       const F = frame({ W: sz.W, H: sz.H, xmin: a - pad, xmax: b + pad, ymin: lo, ymax: hi });
       let s = '';
-      const cls = (i) => (st.dashed ? 'curve dash' + (i ? ' alt' : '') : ['curve', 'curve alt', 'curve alt2'][Math.min(i, 2)]);
+      const cls = (i) => (st.dashed ? 'curve dash' + (i ? ' alt' : '') : ['curve', 'curve alt', 'curve alt2', 'curve faint'][Math.min(i, 3)]);
       fns.forEach((f, i) => (s += curve(F, f, a, b, cls(i))));
       const e = st.ends || '', f0 = fns[0];
       [[a, e[0], 1], [b, e[1], -1]].forEach(([x, t, dir]) => {
@@ -966,6 +968,45 @@
         out: `‖f − S_${N}‖₂² ≈ ${fmt(l2)}`,
         msg: '',
         cap: `N = ${N}　‖f − S_N‖₂² ≈ ${fmt(l2)}`,
+      };
+    },
+  };
+
+  /* ---- ヤングの不等式：y = x^{p−1} と二つの面積 ---- */
+  TYPES.young = {
+    presets: {
+      p3: { label: 'p = 3（q = 3/2）', p: 3, a: '1.2', b: '1' },
+      p2: { label: 'p = 2（q = 2）', p: 2, a: '1.5', b: '0.8' },
+      eq: { label: '等号の場合 b = a^{p−1}', p: 3, a: '1', b: '1' },
+    },
+    fields: [
+      { k: 'p', label: '$p$', kind: 'range', to: (v) => Math.round((v - 1.1) * 1000 / 4.9), from: (s) => +(1.1 + s * 4.9 / 1000).toFixed(2), show: (st) => fmt(st.p) + '　q = ' + fmt(st.p / (st.p - 1)) },
+      { k: 'a', label: '$a =$', kind: 'num' },
+      { k: 'b', label: '$b =$', kind: 'num' },
+    ],
+    draw(st, sz) {
+      const p = st.p, q = p / (p - 1), a = st.aV, b = st.bV;
+      if (!(a > 0 && b > 0)) return { msg: 'a > 0, b > 0 としてください' };
+      const xb = Math.pow(b, q - 1), X1 = Math.max(a, xb) * 1.15, Y1 = Math.max(b, Math.pow(a, p - 1)) * 1.15;
+      const F = frame({ W: sz.W, H: sz.H || 280, xmin: -X1 * 0.04, xmax: X1, ymin: -Y1 * 0.05, ymax: Y1 });
+      const f = (x) => Math.pow(Math.max(x, 0), p - 1);
+      const N = 300;
+      let d1 = `M${F.X(0)},${F.Y(0)}`;
+      for (let i = 0; i <= N; i++) { const x = a * i / N; d1 += `L${F.X(x).toFixed(1)},${F.Y(f(x)).toFixed(1)}`; }
+      d1 += `L${F.X(a)},${F.Y(0)}Z`;
+      let d2 = `M${F.X(0)},${F.Y(0)}`;
+      for (let i = 0; i <= N; i++) { const y = b * i / N; d2 += `L${F.X(Math.pow(y, q - 1)).toFixed(1)},${F.Y(y).toFixed(1)}`; }
+      d2 += `L${F.X(0)},${F.Y(b)}Z`;
+      let s = `<path d="${d1}" fill="${F.hatchH}" stroke="none"/><path d="${d2}" fill="${F.hatchV}" stroke="none"/>`;
+      s += `<rect x="${F.X(0)}" y="${F.Y(b)}" width="${F.X(a) - F.X(0)}" height="${F.Y(0) - F.Y(b)}" fill="none" stroke="#8c1c13" stroke-width="1.6" stroke-dasharray="6 3"/>`;
+      s += curve(F, f, 0, X1, 'curve');
+      s += text(F, a, 0, 'a', 'acc', 'middle', 0, 14) + text(F, 0, b, 'b', 'acc', 'end', -6, 4);
+      s += text(F, a * 0.62, f(a * 0.62) * 0.35, 'S₁', 'nav', 'middle') + text(F, xb * 0.3, b * 0.72, 'S₂', 'nav', 'middle');
+      const lhs = a * b, rhs = Math.pow(a, p) / p + Math.pow(b, q) / q;
+      return {
+        svg: svgWrap(F, s),
+        out: `ab = ${fmt(lhs)} ≤ aᵖ/p + b^q/q = ${fmt(rhs)}`,
+        msg: '', cap: '',
       };
     },
   };
