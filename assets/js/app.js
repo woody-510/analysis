@@ -123,7 +123,7 @@
         case 'table': html += `<div class="tblwrap">${rich(b.html, ctx)}</div>`; break;
         case 'qa': {
           const id = uid();
-          html += `<div class="qa"><button type="button" class="qa-q" aria-expanded="false" data-tg="${id}"><span class="qm">Q</span><span class="qt">${rich(b.q, ctx)}</span><span class="ar">▾</span></button><div class="collapsible qa-a" id="${id}" hidden><span class="am">A</span><div class="qa-body">${para(rich(b.a, ctx))}</div></div></div>`;
+          html += `<div class="qa"><button type="button" class="qa-q" aria-expanded="false" data-tg="${id}"><span class="qm">Q</span><span class="qa-t">${rich(b.q, ctx)}</span><span class="ar">▾</span></button><div class="collapsible qa-a" id="${id}" hidden><span class="am">A</span><div class="qa-body">${para(rich(b.a, ctx))}</div></div></div>`;
           break;
         }
         case 'fig': {
