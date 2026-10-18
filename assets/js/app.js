@@ -14,6 +14,8 @@
   const MACROS = { '\\N': '\\mathbb{N}', '\\R': '\\mathbb{R}', '\\Z': '\\mathbb{Z}', '\\Q': '\\mathbb{Q}', '\\eps': '\\varepsilon' };
   const params = new URLSearchParams(location.search);
   const EMBED = params.get('embed') === '1';
+  /* claude.ai 上の公開版では印刷画面を開けないので、PDF ボタンは案内に切り替える */
+  const HOSTED = !!window.AC_HOSTED;
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const store = {
     get(k, d) { try { const v = localStorage.getItem('ac.' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
@@ -391,6 +393,12 @@
     ['fig', 'グラフ・図', true], ['prob', '問題', true], ['hint', 'ヒント', false], ['ans', '解答', false], ['space', '解答欄（広め）', true],
   ];
   function pdfModalHTML(what) {
+    if (HOSTED) {
+      return `<div class="modal-ov" id="pdfmodal"><div class="modal" role="dialog" aria-label="PDF 出力について">
+      <h3>PDF で保存</h3><p class="d">claude.ai 上の表示では、ブラウザの印刷画面を開けないため PDF に保存できません。PDF が必要なときは、Claude に「${esc(what)} を PDF にして」と頼むか、GitHub から取り出したフォルダの index.html を手元のブラウザで開いてください。手元で開けば、含める項目を選んで A4 で保存できます。</p>
+      <div class="row"><button type="button" class="pbtn js-cancel">閉じる</button></div>
+    </div></div>`;
+    }
     const saved = store.get('pdf', {});
     return `<div class="modal-ov" id="pdfmodal"><div class="modal" role="dialog" aria-label="PDF 出力の設定">
       <h3>PDF で保存</h3><p class="d">${esc(what)} を A4 で出力します。含める項目を選んでください。印刷画面で「送信先：PDF に保存」を選ぶとファイルになります。</p>
@@ -405,7 +413,7 @@
     const m = document.getElementById('pdfmodal');
     if (!m) return;
     const read = () => { const o = {}; m.querySelectorAll('[data-opt]').forEach((c) => (o[c.dataset.opt] = c.checked)); return o; };
-    applyPdfOpts(read());
+    if (!HOSTED) applyPdfOpts(read());
     document.addEventListener('click', (e) => {
       if (e.target.closest('.js-pdf')) { m.classList.add('show'); document.documentElement.classList.remove('drawer'); }
       if (e.target.closest('.js-cancel') || e.target === m) m.classList.remove('show');

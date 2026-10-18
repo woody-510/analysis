@@ -12,6 +12,10 @@
 npx http-server -p 8080 .
 ```
 
+## claude.ai で公開するとき
+
+`python3 tools/build_artifact.py <出力フォルダ>` で公開用の版を作る。フォントを Google Fonts から読み込み、印刷画面を開けない公開先では PDF ボタンが案内に切り替わる。
+
 ## ファイル構成
 
 | 場所 | 中身 |

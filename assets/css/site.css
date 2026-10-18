@@ -294,7 +294,7 @@ svg .peak{fill:#d9a50f;stroke:#7a6000;stroke-width:.8}
   .m-tocbar a.on{color:var(--accent);font-weight:700;border-color:var(--accent)}
   .layout{display:block}
   .toc{display:none}
-  article.doc{padding:14px 14px 60px}
+  article.doc{padding:14px max(16px, env(safe-area-inset-right, 0px)) 60px max(16px, env(safe-area-inset-left, 0px))}
   h1.title{font-size:26px}
   h1.title .sub{display:block;margin:0}
   h2.sec{font-size:20px}
