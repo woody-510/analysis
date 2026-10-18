@@ -185,7 +185,7 @@ $$C(I):=\{f:I\to\mathbb{R}\mid f\text{ は }I\text{ のすべての点で連続}
       { t: 'fig', type: 'epsdelta', preset: 'sq', cont: true, editable: true, caption: R`連続性のモード（$L=f(a)$ に固定）。プリセットの <code>sign(x)</code>（$a=0$）では、$f(0)=0$ の $\varepsilon$ 帯からすぐ外れる点が $0$ のいくらでも近くにあるので、$\delta$ が見つからない。` },
 
       { t: 'h2', id: 'counter', text: '反例と注意' },
-      { t: 'ex', id: 'ex-dirichlet', title: 'ディリクレ関数はどこでも不連続', text: R`$D:\mathbb{R}\to\mathbb{R}$, $D(x)=\begin{cases}1&(x\in\mathbb{Q})\\0&(x\notin\mathbb{Q})\end{cases}$ とする。どんな区間にも有理数と無理数が含まれる（有理数・無理数の稠密性）ので、どの点 $a$ のどれだけ近くにも $D$ の値が $1$ の点と $0$ の点がある。$\varepsilon=\frac12$ に対してどんな $\delta$ も条件をみたさず、$D$ はすべての点で不連続である。` },
+      { t: 'ex', id: 'ex-dirichlet', title: 'ディリクレ関数はどこでも不連続', text: R`$D:\mathbb{R}\to\mathbb{R}$, $D(x)=\begin{cases}1&(x\in\mathbb{Q})\\0&(x\notin\mathbb{Q})\end{cases}$ とする。どんな区間にも有理数と無理数が含まれる（[[supremum#prop-dense|有理数・無理数の稠密性]]）ので、どの点 $a$ のどれだけ近くにも $D$ の値が $1$ の点と $0$ の点がある。$\varepsilon=\frac12$ に対してどんな $\delta$ も条件をみたさず、$D$ はすべての点で不連続である。` },
       { t: 'ex', id: 'ex-xd', title: 'x·D(x) は 0 でだけ連続', text: R`$g(x)=xD(x)$ とする。$|g(x)-g(0)|=|x|D(x)\le|x|$ なので、$\delta=\varepsilon$ で $0$ において連続である。一方 $a\ne0$ では、$a$ の近くで $g$ の値は $0$ と $a$ の近くの値を行き来するので不連続である。「連続な点が一点だけ」の関数もありうる。` },
       { t: 'note', title: '「グラフがつながっている」は定義ではない', text: R`直感として有用だが、上の $xD(x)$ のように「描けない」関数の連続性は、直感では判断できない。連続性は<em>一点ごと</em>の性質であり、区間全体のつながりは[[intermediate-value|中間値の定理]]として、定義から証明すべき事実である。` },
 
@@ -318,6 +318,76 @@ $$C(I):=\{f:I\to\mathbb{R}\mid f\text{ は }I\text{ のすべての点で連続}
       { t: 'rem', title: '三つの仮定はどれも外せない', text: R`<ul><li><b>閉区間でない</b>：$f(x)=x$ は $(0,1)$ 上で連続だが、上限 $1$ をとる点がなく最大値をもたない。</li><li><b>有界な区間でない</b>：$f(x)=x$ は $[0,\infty)$ 上で連続だが、上に有界でない。</li><li><b>連続でない</b>：$[0,1]$ 上で $f(x)=x\ (x<1)$、$f(1)=0$ とすると、値は $1$ にいくらでも近づくが $1$ をとらない。</li></ul>` },
       { t: 'h2', id: 'problems', text: '問題' },
       { t: 'problem', id: 'prob-evt-1', level: 1, title: '基本', text: R`$f:(-1,1)\to\mathbb{R}$, $f(x)=x^2$ とする。最小値は存在するが、最大値は存在しないことを示せ。また、最大値・最小値の定理のどの仮定が成り立っていないか答えよ。`, hint: R`上限は $1$ だが、$x^2=1$ となる $x$ は $(-1,1)$ にない。`, answer: R`$f(0)=0\le f(x)$ なので最小値は $0$。一方 $f(x)<1$ がすべての $x\in(-1,1)$ で成り立ち、$x_n=1-\frac1n$ で $f(x_n)\to1$ なので $\sup f=1$。$1$ をとる点はないので最大値は存在しない。成り立っていない仮定は「区間が閉じている」こと。`, space: 6 },
+    ],
+  });
+  /* ------------------------------------------------------------ */
+  A.push({
+    id: 'uniform-continuity',
+    title: '一様連続',
+    sub: 'ハイネ＝カントールの定理',
+    yomi: 'いちようれんぞく',
+    aliases: ['一様連続', 'いちようれんぞく', 'ハイネ・カントールの定理', 'はいね', 'かんとーる', 'リプシッツ連続', 'りぷしっつ', 'Lipschitz'],
+    kind: '定理',
+    field: '関数の極限と連続',
+    grade: '1年前期',
+    importance: 3,
+    prereq: ['continuity', 'bolzano-weierstrass', 'logic-quantifiers'],
+    related: ['riemann-integral', 'extreme-value', 'uniform-convergence'],
+    notation: [
+      R`$I\subset\mathbb{R}$：区間（開・閉・半開・無限区間のどれでもよい）。$f:I\to\mathbb{R}$。`,
+      R`$\delta=\delta(\varepsilon,a)$：連続の定義の $\delta$。$\varepsilon$ と点 $a$ の両方に依存してよい。`,
+      R`$\delta=\delta(\varepsilon)$：一様連続の定義の $\delta$。$\varepsilon$ だけで決まり、点によらない。`,
+      R`$L\ge0$：リプシッツ定数（実数）。`,
+    ],
+    synopsis: R`連続性は「点ごと」の性質で、$\delta$ は点に依存してよい。一様連続とは、一つの $\delta$ が区間のすべての点で同時に使えることである。有界閉区間上の連続関数は自動的に一様連続になる（ハイネ＝カントールの定理）。この定理は、連続関数の積分可能性を示すときの鍵になる。`,
+    body: [
+      { t: 'h2', id: 'def', text: '定義：δ を点によらずにとる' },
+      { t: 'def', id: 'def-uc', title: '一様連続', yomi: 'いちようれんぞく', imp: 3, text: R`区間 $I\subset\mathbb{R}$ 上の関数 $f:I\to\mathbb{R}$ が $I$ 上で<b class="term">一様連続</b>であるとは、次が成り立つことをいう。
+$$\forall\varepsilon>0,\ \exists\delta=\delta(\varepsilon)>0\ \text{ s.t. }\ \forall x,y\in I,\quad|x-y|<\delta\Longrightarrow|f(x)-f(y)|<\varepsilon. \tag{#}$$` },
+      { t: 'note', title: '連続との違いは量化子の順番だけ', text: R`<ul><li>連続：$\forall\varepsilon>0\ \ \forall a\in I\ \ \exists\delta>0\ \ \forall x\in I,\ |x-a|<\delta\Rightarrow|f(x)-f(a)|<\varepsilon$</li><li>一様連続：$\forall\varepsilon>0\ \ \exists\delta>0\ \ \forall a\in I\ \ \forall x\in I,\ |x-a|<\delta\Rightarrow|f(x)-f(a)|<\varepsilon$</li></ul>連続では $\delta$ を選ぶ前に点 $a$ が決まっているので $\delta=\delta(\varepsilon,a)$。一様連続では $\delta$ を選んだ後で点が動くので、$\delta=\delta(\varepsilon)$ はすべての点で使えなければならない。（[[logic-quantifiers#prop-neg|量化子の順番]]）` },
+      { t: 'prop', id: 'prop-uc-cont', title: '一様連続ならば連続', yomi: 'いちようれんぞくなられんぞく', imp: 1, text: R`$f:I\to\mathbb{R}$ が $I$ 上で一様連続ならば、$f\in C(I)$。` },
+      { t: 'proof', steps: [{ text: R`$a\in I$、$\varepsilon>0$ を任意にとり、(#) の $\delta=\delta(\varepsilon)$ をとる。$x\in I$, $|x-a|<\delta$ ならば、(#) で $y=a$ として $|f(x)-f(a)|<\varepsilon$。よって $f$ は $a$ で連続で、$a$ は任意なので $f\in C(I)$（[[continuity#def-ci|C(I)]]）。` }] },
+      { t: 'def', id: 'def-lip', title: 'リプシッツ連続', yomi: 'りぷしっつれんぞく', imp: 2, text: R`$f:I\to\mathbb{R}$ が<b class="term">リプシッツ連続</b>である $:\Longleftrightarrow$ ある $L\in\mathbb{R}$, $L\ge0$ が存在して、すべての $x,y\in I$ について $|f(x)-f(y)|\le L|x-y|$。$L$ を<b class="term">リプシッツ定数</b>という。` },
+      { t: 'prop', id: 'prop-lip-uc', title: 'リプシッツ連続ならば一様連続', yomi: 'りぷしっつならいちようれんぞく', imp: 2, text: R`$f:I\to\mathbb{R}$ がリプシッツ連続ならば、$f$ は $I$ 上で一様連続である。` },
+      { t: 'proof', steps: [{ text: R`リプシッツ定数を $L\ge0$ とし、$\varepsilon>0$ を任意にとる。$\delta:=\dfrac\varepsilon{L+1}>0$ とおく（$\delta$ は $\varepsilon$ だけで決まる。$L=0$ でも割り算ができるよう $L+1$ とした）。$x,y\in I$, $|x-y|<\delta$ ならば $|f(x)-f(y)|\le L|x-y|\le L\delta=\dfrac{L}{L+1}\varepsilon<\varepsilon$。` }] },
+      { t: 'ex', id: 'ex-uc-sq', title: 'x² は [0, 1] 上で一様連続', text: R`$x,y\in[0,1]$ なら $|x+y|\le2$ なので $|x^2-y^2|=|x+y|\,|x-y|\le2|x-y|$。$f(x)=x^2$ は $[0,1]$ 上でリプシッツ定数 $2$ のリプシッツ連続関数なので、一様連続である。より一般に、$f:I\to\mathbb{R}$ が $I$ の内部で微分可能、$I$ で連続で $|f'|\le L$ ならば、[[mean-value#thm-mvt|平均値の定理]]より $|f(x)-f(y)|=|f'(\xi)||x-y|\le L|x-y|$ となりリプシッツ連続である。` },
+
+      { t: 'h2', id: 'counter', text: '一様連続でない例' },
+      { t: 'p', text: R`一様連続の否定は、[[logic-quantifiers#prop-neg|否定の規則]]で量化子を入れかえて
+$$\exists\varepsilon_0>0\ \ \forall\delta>0\ \ \exists x,y\in I\ \ \text{ s.t. }\ |x-y|<\delta\ \text{ かつ }\ |f(x)-f(y)|\ge\varepsilon_0$$
+となる。「どんなに近い 2 点をとっても、値の差が $\varepsilon_0$ 以上になる組がある」ということである。` },
+      { t: 'ex', id: 'ex-uc-inv', title: '1/x は (0, 1] 上で一様連続でない', text: R`$f:(0,1]\to\mathbb{R}$, $f(x)=\dfrac1x$ は $(0,1]$ 上で連続（[[continuity#prop-cont-arith|商の連続性]]）だが、一様連続でない。実際 $\varepsilon_0=1$ とし、$\delta>0$ を任意にとる。$n\in\mathbb{N}$ を $n>\frac1\delta$ をみたすようにとり（アルキメデスの原理）、$x=\frac1n$, $y=\frac1{n+1}$ とおくと、$x,y\in(0,1]$ で
+$$|x-y|=\frac1{n(n+1)}<\frac1n<\delta,\qquad|f(x)-f(y)|=|n-(n+1)|=1\ge\varepsilon_0.$$
+$0$ の近くでグラフが急になりすぎて、一つの $\delta$ では間に合わないのである。` },
+      { t: 'ex', id: 'ex-uc-sq-r', title: 'x² は ℝ 上で一様連続でない', text: R`$f:\mathbb{R}\to\mathbb{R}$, $f(x)=x^2$ とする。$\varepsilon_0=1$、$\delta>0$ を任意にとり、$x:=\frac1\delta$、$y:=\frac1\delta+\frac\delta2$ とおくと $|x-y|=\frac\delta2<\delta$ で、
+$$|f(y)-f(x)|=(y-x)(y+x)=\frac\delta2\Bigl(\frac2\delta+\frac\delta2\Bigr)=1+\frac{\delta^2}4\ge1.$$
+区間は有界でないと、遠くでグラフがいくらでも急になりうる。` },
+      { t: 'fig', type: 'plot', preset: 'inv01', caption: R`$y=\frac1x$ を $(0,1]$ で描いたもの。横幅が同じ $\delta$ の区間でも、$0$ に近いところほど縦の変化が大きい。どの $\delta$ をとっても、十分 $0$ に近いところでは値の差が $1$ を超える。` },
+
+      { t: 'h2', id: 'heine', text: 'ハイネ＝カントールの定理' },
+      { t: 'thm', id: 'thm-heine', title: 'ハイネ＝カントールの定理', yomi: 'はいね・かんとーるのていり', imp: 3, text: R`$a,b\in\mathbb{R}$, $a<b$ とする。$f\in C([a,b])$ ならば、$f$ は $[a,b]$ 上で一様連続である。` },
+      { t: 'strategy', text: R`背理法。一様連続でないなら、否定の形から「距離 $\frac1n$ 未満なのに値が $\varepsilon_0$ 以上離れた 2 点 $x_n,y_n$」が各 $n$ でとれる。$[a,b]$ は有界なので[[bolzano-weierstrass|ボルツァーノ＝ワイエルシュトラス]]で $x_n$ の収束部分列をとり、その極限での連続性と矛盾させる。` },
+      {
+        t: 'proof',
+        sketch: R`近いのに値が離れた点の組の列 $(x_n,y_n)$ をとる。部分列で $x_{n_k}\to c$ とすると $y_{n_k}\to c$ も成り立ち、連続性より $f(x_{n_k})-f(y_{n_k})\to f(c)-f(c)=0$。これは「差が $\varepsilon_0$ 以上」に反する。`,
+        steps: [
+          { text: R`$f$ が $[a,b]$ 上で一様連続でないと仮定する。否定の形より、ある $\varepsilon_0>0$ が存在して、どんな $\delta>0$ に対しても $|x-y|<\delta$ かつ $|f(x)-f(y)|\ge\varepsilon_0$ となる $x,y\in[a,b]$ がある。` },
+          { text: R`各 $n\in\mathbb{N}$ について $\delta=\frac1n$ とし、そのような点を $x_n,y_n\in[a,b]$ とする：$|x_n-y_n|<\frac1n$、$|f(x_n)-f(y_n)|\ge\varepsilon_0$。` },
+          { text: R`実数列 $\{x_n\}$ はすべての項が $[a,b]$ に入るので有界である（$|x_n|\le\max\{|a|,|b|\}$）。[[bolzano-weierstrass#thm-bw|ボルツァーノ＝ワイエルシュトラスの定理]]より、収束する部分列 $\{x_{n_k}\}_{k\in\mathbb{N}}$ がとれる。その極限を $c\in\mathbb{R}$ とすると、$a\le x_{n_k}\le b$ と[[sequence-convergence#prop-order|極限と不等式]]より $c\in[a,b]$。` },
+          {
+            text: R`$y_{n_k}\to c$ も成り立つ。実際、[[bolzano-weierstrass#prop-nk-ge-k|$n_k\ge k$]] より`,
+            eqs: [[R`|y_{n_k}-c|\le|y_{n_k}-x_{n_k}|+|x_{n_k}-c|<\frac1{n_k}+|x_{n_k}-c|\le\frac1k+|x_{n_k}-c|\ \longrightarrow\ 0\quad(k\to\infty).`, R`三角不等式・はさみうち`]],
+          },
+          { text: R`$f$ は $c\in[a,b]$ で連続なので、[[continuity#prop-cont-seq|連続性の数列による特徴づけ]]より $f(x_{n_k})\to f(c)$、$f(y_{n_k})\to f(c)$。よって $|f(x_{n_k})-f(y_{n_k})|\to|f(c)-f(c)|=0$（四則演算と絶対値の連続性）。` },
+          { text: R`一方、すべての $k$ で $|f(x_{n_k})-f(y_{n_k})|\ge\varepsilon_0$ なので、[[sequence-convergence#prop-order|極限と不等式]]より $0\ge\varepsilon_0$ となり、$\varepsilon_0>0$ に矛盾する。よって $f$ は一様連続である。` },
+        ],
+      },
+      { t: 'crux', text: R`「閉区間」と「有界」の両方が効いている。有界性はボルツァーノ＝ワイエルシュトラスの定理を使うため、閉区間であることは極限 $c$ が区間の中に残る（$f$ の連続性が使える）ためである。上の二つの反例は、それぞれ閉でない区間 $(0,1]$、有界でない区間 $\mathbb{R}$ だった。この「有界閉」の役割は、のちに[[metric-continuity|距離空間]]でコンパクト性として抽象化される。` },
+      { t: 'qa', q: R`$[a,b]$ 上の連続関数の $\delta$ はどうやって具体的に求める？`, a: R`定理は $\delta$ の<em>存在</em>しか保証しない。具体的な $\delta$ が欲しいときは、[[uniform-continuity#ex-uc-sq|例]]のように $|f(x)-f(y)|\le L|x-y|$ の形の評価を探す（たとえば導関数の最大値を $L$ にとる）のが実用的である。` },
+
+      { t: 'h2', id: 'problems', text: '問題' },
+      { t: 'problem', id: 'prob-uc-1', level: 1, title: '基本', text: R`$f:[0,\infty)\to\mathbb{R}$, $f(x)=\sqrt x$ について、すべての $x,y\ge0$ で $|\sqrt x-\sqrt y|\le\sqrt{|x-y|}$ が成り立つことを示し、$f$ が一様連続であることを示せ。`, hint: R`$x\ge y$ としてよい。$(\sqrt y+\sqrt{x-y})^2\ge x$。`, answer: R`$x\ge y\ge0$ としてよい。$(\sqrt y+\sqrt{x-y})^2=x+2\sqrt{y(x-y)}\ge x$ なので $\sqrt y+\sqrt{x-y}\ge\sqrt x$、すなわち $\sqrt x-\sqrt y\le\sqrt{x-y}$。$\varepsilon>0$ に対して $\delta:=\varepsilon^2$ とおくと、$|x-y|<\delta$ なら $|\sqrt x-\sqrt y|\le\sqrt{|x-y|}<\varepsilon$。よって一様連続（$\delta$ は $\varepsilon$ だけで決まった）。`, space: 7 },
+      { t: 'problem', id: 'prob-uc-2', level: 2, title: '標準', text: R`$f:(0,1)\to\mathbb{R}$ が一様連続ならば、$f$ は有界であることを示せ。`, hint: R`$\varepsilon=1$ の $\delta$ で区間を有限個に分ける。`, answer: R`$\varepsilon=1$ に対する $\delta\in(0,1)$ をとり、$n\in\mathbb{N}$ を $\frac1n<\delta$ となるようにとる。点 $c_j:=\frac j{n+1}$（$j=1,\dots,n$）は $(0,1)$ に属し、任意の $x\in(0,1)$ は、ある $c_j$ との距離が $\frac1{n+1}$ 未満、したがって $\delta$ 未満である（$x<c_1$ なら $|x-c_1|<c_1=\frac1{n+1}$、$x>c_n$ なら $|x-c_n|<1-c_n=\frac1{n+1}$、$c_j\le x\le c_{j+1}$ なら $|x-c_j|\le\frac1{n+1}$ で、等号のときは $x=c_{j+1}$ をとればよい）。よって $|f(x)|\le|f(x)-f(c_j)|+|f(c_j)|<1+\max_j|f(c_j)|$。右辺は $x$ によらない。`, space: 8 },
     ],
   });
 })();

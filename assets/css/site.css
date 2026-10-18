@@ -267,6 +267,10 @@ svg .peak{fill:#d9a50f;stroke:#7a6000;stroke-width:.8}
 svg .curve.alt{stroke:var(--accent);stroke-dasharray:7 4}
 svg .curve.dash{stroke-dasharray:4 4}
 svg .curve.alt2{stroke:#233d6b;stroke-width:2.4}
+svg .tstem{stroke:#9b9482;stroke-width:2}
+svg .rup{fill:rgba(168,38,27,.10);stroke:var(--accent);stroke-width:1}
+svg .rlow{fill:rgba(35,61,107,.16);stroke:#233d6b;stroke-width:1;stroke-dasharray:3 2}
+svg .ballfill{fill:rgba(242,194,48,.22);stroke:none}
 .fig.plain svg{width:100%;height:auto;display:block;max-height:300px}
 .fig.plain svg text{font:12px var(--f-mono);fill:var(--ink)}
 .doc table.tbl{border-collapse:collapse;margin:10px 0;font-size:14px;min-width:60%}

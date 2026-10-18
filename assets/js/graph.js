@@ -1,4 +1,4 @@
-/* 数式パーサーと、式を書き換えられる図（数列・ε-δ・中間値・接線・ロル／平均値・最大最小・部分列） */
+/* 数式パーサーと、式を書き換えられる図（数列・ε-δ・中間値・接線・ロル／平均値・最大最小・部分列・部分和・リーマン和・一様収束・単位球・反復・フーリエ級数） */
 (function () {
   'use strict';
 
@@ -32,7 +32,7 @@
         while (w.length) {
           const f = WORDS.find((k) => w.startsWith(k));
           if (!f) throw new Error('「' + w + '」は使えない記号');
-          out.push(FUNCS[f] ? { k: 'fn', v: f } : f === 'n' || f === 'x' ? { k: 'var' } : { k: 'num', v: CONSTS[f] });
+          out.push(FUNCS[f] ? { k: 'fn', v: f } : f === 'n' || f === 'x' ? { k: 'var', v: f } : { k: 'num', v: CONSTS[f] });
           w = w.slice(f.length);
         }
         i = j;
@@ -62,7 +62,7 @@
       const t = T[p];
       if (!t) throw new Error('式が途中で終わっている');
       if (t.k === 'num') { p++; return { o: 'num', v: t.v }; }
-      if (t.k === 'var') { p++; return { o: 'var' }; }
+      if (t.k === 'var') { p++; return { o: 'var', v: t.v }; }
       if (t.k === 'fn') {
         p++;
         if (!isOp('(')) throw new Error(t.v + ' の後には ( が必要');
@@ -77,21 +77,22 @@
     if (p < T.length) throw new Error('式の終わりに余分な記号がある');
     return tree;
   }
-  function ev(nd, x) {
+  /* x と n を別々に渡せる（関数列 f_n(x) の図用）。n を省くと n = x として扱う。 */
+  function ev(nd, x, n) {
     switch (nd.o) {
       case 'num': return nd.v;
-      case 'var': return x;
-      case 'neg': return -ev(nd.a, x);
-      case '+': return ev(nd.a, x) + ev(nd.b, x);
-      case '-': return ev(nd.a, x) - ev(nd.b, x);
-      case '*': return ev(nd.a, x) * ev(nd.b, x);
-      case '/': return ev(nd.a, x) / ev(nd.b, x);
-      case '^': return Math.pow(ev(nd.a, x), ev(nd.b, x));
-      case 'fn': return FUNCS[nd.f](ev(nd.a, x));
+      case 'var': return nd.v === 'n' ? n : x;
+      case 'neg': return -ev(nd.a, x, n);
+      case '+': return ev(nd.a, x, n) + ev(nd.b, x, n);
+      case '-': return ev(nd.a, x, n) - ev(nd.b, x, n);
+      case '*': return ev(nd.a, x, n) * ev(nd.b, x, n);
+      case '/': return ev(nd.a, x, n) / ev(nd.b, x, n);
+      case '^': return Math.pow(ev(nd.a, x, n), ev(nd.b, x, n));
+      case 'fn': return FUNCS[nd.f](ev(nd.a, x, n));
     }
     return NaN;
   }
-  function compile(src) { const t = parse(src); return (x) => ev(t, x); }
+  function compile(src) { const t = parse(src); return (x, n) => ev(t, x, n === undefined ? x : n); }
   function num(src) {
     const v = compile(src)(0);
     if (!isFinite(v)) throw new Error('「' + src + '」の値が定まらない');
@@ -529,6 +530,8 @@
       rho: { label: '階段関数 f と ρ(x) = f(x)/x', expr: 'step(x-1); step(x-1)/x', a: '-1', b: '3', names: ['f(x)', 'ρ(x)'] },
       xxd: { label: 'x²D(x) の模式図', expr: 'x^2; 0', a: '-1.2', b: '1.2', dashed: true, names: ['有理数での値 x²', '無理数での値 0'] },
       mvtF: { label: 'f = x³、弦、その差 F', expr: 'x^3; 3x+2; x^3-(3x+2)', a: '-1', b: '2', names: ['f(x) = x³', '弦 y = 3x + 2', 'F(x) = f(x) − 弦'] },
+      inv01: { label: 'y = 1/x on (0, 1]', expr: '1/x', a: '0.04', b: '1', names: ['y = 1/x'] },
+      ftc: { label: 'f = 階段関数、F(x) = ∫₀ˣ f', expr: 'step(x-1); (x-1)step(x-1)', a: '0', b: '2', names: ['f(t)（x = 1 で跳ぶ）', 'F(x) = ∫₀ˣ f(t) dt（x = 1 で折れる）'] },
     },
     fields: [
       { k: 'expr', label: '$y =$', kind: 'text', w: 230 },
@@ -707,6 +710,266 @@
     },
   };
 
+  /* ---- 級数の部分和 S_n = a_1 + … + a_n ---- */
+  const intRange = (lo, hi) => ({ to: (v) => Math.round((v - lo) * 1000 / (hi - lo)), from: (s) => Math.round(lo + s * (hi - lo) / 1000) });
+  TYPES.psum = {
+    presets: {
+      geom: { label: 'Σ (1/2)ⁿ = 1', expr: '(1/2)^n', S: '1', n: 30 },
+      tele: { label: 'Σ 1/(n(n+1)) = 1', expr: '1/(n(n+1))', S: '1', n: 40 },
+      p2: { label: 'Σ 1/n² = π²/6', expr: '1/n^2', S: 'pi^2/6', n: 60 },
+      alt: { label: 'Σ (−1)ⁿ⁺¹/n = log 2', expr: '(-1)^(n+1)/n', S: 'log(2)', n: 60 },
+      harm: { label: 'Σ 1/n（発散）', expr: '1/n', S: '', n: 150 },
+      osc: { label: 'Σ (−1)ⁿ（発散）', expr: '(-1)^n', S: '', n: 30 },
+    },
+    fields: [
+      { k: 'expr', label: '$a_n =$', kind: 'text', w: 170 },
+      { k: 'S', label: '和 $S =$', kind: 'num', optional: true },
+      { k: 'n', label: '項数 $n$', kind: 'range', ...intRange(5, 200), show: (st) => String(st.n) },
+    ],
+    draw(st, sz) {
+      const f = st.fn, n = Math.round(st.n), S = st.SV;
+      const a = [], P = [];
+      let acc = 0;
+      for (let k = 1; k <= n; k++) {
+        const v = f(k);
+        if (!isFinite(v)) return { msg: 'n = ' + k + ' で値が定まらない' };
+        a.push(v); acc += v; P.push(acc);
+      }
+      const ys = P.concat(a, [0], S != null ? [S] : []);
+      let lo = Math.min(...ys), hi = Math.max(...ys);
+      const pad = (hi - lo) * 0.08 || 0.5; lo -= pad; hi += pad;
+      const W = sz.W || 680, H = sz.H || 262, L = 44, Rr = 14, T = 30, B = 28;
+      const dx = (W - L - Rr) / n, x = (k) => L + (k - 0.5) * dx, y = (v) => T + (hi - v) * (H - T - B) / (hi - lo);
+      let s = `<line class="axis" x1="${L}" x2="${W - Rr}" y1="${y(0)}" y2="${y(0)}"/><line class="axis" x1="${L}" x2="${L}" y1="${T}" y2="${H - B}"/>`;
+      const sy = niceStep(hi - lo);
+      for (let t = Math.ceil(lo / sy) * sy; t <= hi + 1e-9; t += sy) s += `<line class="grid" x1="${L}" x2="${W - Rr}" y1="${y(t)}" y2="${y(t)}"/><text class="lab sm" x="${L - 6}" y="${y(t) + 3.5}" text-anchor="end">${fmt(+t.toFixed(10))}</text>`;
+      if (S != null) s += `<line class="alpha" x1="${L}" x2="${W - Rr}" y1="${y(S)}" y2="${y(S)}"/><text class="lab acc" x="${W - Rr - 4}" y="${y(S) - 5}" text-anchor="end">S</text>`;
+      const r0 = Math.max(1.6, Math.min(4, dx * 0.3));
+      for (let k = 1; k <= n; k++) s += `<line class="tstem" x1="${x(k)}" x2="${x(k)}" y1="${y(0)}" y2="${y(a[k - 1])}"/>`;
+      s += `<polyline class="subline" points="${P.map((v, i) => x(i + 1).toFixed(1) + ',' + y(v).toFixed(1)).join(' ')}"/>`;
+      P.forEach((v, i) => (s += `<circle class="pin" cx="${x(i + 1)}" cy="${y(v)}" r="${r0}"/>`));
+      const step = n <= 30 ? 5 : n <= 80 ? 10 : 25;
+      for (let k = 1; k <= n; k++) if (k === 1 || k % step === 0) s += `<text class="lab sm" x="${x(k)}" y="${H - 11}" text-anchor="middle">${k}</text>`;
+      s += `<line class="tstem" x1="${L + 8}" x2="${L + 8}" y1="${6}" y2="${18}"/><text class="lab sm" x="${L + 14}" y="${16}">項 aₖ</text><circle class="pin" cx="${L + 70}" cy="${12}" r="3.5"/><text class="lab sm" x="${L + 78}" y="${16}">部分和 Sₖ</text>`;
+      return {
+        svg: `<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`,
+        out: `S_${n} = ${fmt(acc)}` + (S != null ? `　|S − S_${n}| = ${fmt(Math.abs(S - acc))}` : ''),
+        msg: '', cap: '',
+      };
+    },
+  };
+
+  /* ---- リーマン和：下ダルブー和と上ダルブー和 ---- */
+  TYPES.riemann = {
+    presets: {
+      sq: { label: 'x² on [0, 1]', expr: 'x^2', a: '0', b: '1', n: 6 },
+      sin: { label: 'sin x on [0, π]', expr: 'sin(x)', a: '0', b: 'pi', n: 6 },
+      exp: { label: 'eˣ on [0, 2]', expr: 'exp(x)', a: '0', b: '2', n: 6 },
+      step: { label: '階段関数 on [0, 2]', expr: 'step(x-1)', a: '0', b: '2', n: 5 },
+    },
+    fields: [
+      { k: 'expr', label: '$f(x) =$', kind: 'text', w: 150 },
+      { k: 'a', label: '$a =$', kind: 'num' },
+      { k: 'b', label: '$b =$', kind: 'num' },
+      { k: 'n', label: '分割数 $n$', kind: 'range', ...intRange(1, 100), show: (st) => String(Math.round(st.n)) },
+    ],
+    play: { k: 'n', from: 1, to: 100, linear: true, label: '分割を細かくする' },
+    frames: () => [{ n: 4 }, { n: 12 }, { n: 48 }],
+    draw(st, sz) {
+      const f = st.fn, a = st.aV, b = st.bV, n = Math.max(1, Math.round(st.n));
+      if (!(b > a)) return { msg: 'a < b となるように入力してください' };
+      const [ymin0, ymax0] = autoY(f, a, b, [0]);
+      const F = frame({ W: sz.W, H: sz.H, xmin: a - (b - a) * 0.04, xmax: b + (b - a) * 0.04, ymin: ymin0, ymax: ymax0 });
+      let s = '', lowS = 0, upS = 0;
+      const h = (b - a) / n, M = Math.max(8, Math.ceil(600 / n));
+      for (let i = 0; i < n; i++) {
+        const x0 = a + i * h, x1 = x0 + h;
+        let m = Infinity, Mx = -Infinity;
+        for (let j = 0; j <= M; j++) { const v = f(x0 + h * j / M); if (isFinite(v)) { m = Math.min(m, v); Mx = Math.max(Mx, v); } }
+        if (!isFinite(m)) return { msg: '区間の中で値が定まらない点がある' };
+        lowS += m * h; upS += Mx * h;
+        const rect = (v, cls) => `<rect class="${cls}" x="${F.X(x0)}" width="${F.X(x1) - F.X(x0)}" y="${Math.min(F.Y(v), F.Y(0))}" height="${Math.abs(F.Y(v) - F.Y(0))}"/>`;
+        s += rect(Mx, 'rup') + rect(m, 'rlow');
+      }
+      s += curve(F, f, a, b, 'curve');
+      return {
+        svg: svgWrap(F, s),
+        out: `下の和 s = ${fmt(lowS)}　上の和 S = ${fmt(upS)}　S − s = ${fmt(upS - lowS)}`,
+        msg: '',
+        cap: `n = ${n}　S − s = ${fmt(upS - lowS)}`,
+      };
+    },
+  };
+
+  /* ---- 関数列の一様収束：極限関数のまわりの ε 帯 ---- */
+  TYPES.unif = {
+    presets: {
+      pow: { label: 'xⁿ on [0, 1]（一様収束しない）', expr: 'x^n', g: 'step(x-1)', a: '0', b: '1', n: 4, eps: 0.2 },
+      pow9: { label: 'xⁿ on [0, 0.9]（一様収束する）', expr: 'x^n', g: '0', a: '0', b: '0.9', n: 4, eps: 0.2 },
+      bump: { label: 'nx/(1 + n²x²) on [0, 1]（しない）', expr: 'n x/(1+n^2x^2)', g: '0', a: '0', b: '1', n: 4, eps: 0.2 },
+      sinn: { label: 'sin(nx)/n on [0, 2π]（する）', expr: 'sin(n x)/n', g: '0', a: '0', b: '2pi', n: 3, eps: 0.2 },
+      absx: { label: '√(x² + 1/n) → |x|（する）', expr: 'sqrt(x^2+1/n)', g: 'abs(x)', a: '-1', b: '1', n: 3, eps: 0.15 },
+      tent: { label: '高さ n・面積 1 の山（しない）', expr: 'n(1-abs(n x-1)+abs(1-abs(n x-1)))/2', g: '0', a: '0', b: '1', n: 4, eps: 0.3 },
+    },
+    fields: [
+      { k: 'expr', label: '$f_n(x) =$', kind: 'text', w: 150 },
+      { k: 'g', label: '$f(x) =$', kind: 'text', w: 100 },
+      { k: 'a', label: '$a =$', kind: 'num' },
+      { k: 'b', label: '$b =$', kind: 'num' },
+      { k: 'n', label: '$n$', kind: 'range', ...logRange(1, 200), show: (st) => String(Math.round(st.n)) },
+      { k: 'eps', label: '$\\varepsilon$', kind: 'range', ...logRange(0.02, 1) },
+    ],
+    play: { k: 'n', from: 1, to: 200, label: 'n を大きくする' },
+    frames: (st) => [2, 10, 50].map((n) => ({ n })),
+    draw(st, sz) {
+      const fn = st.fn, g = st.gFn, a = st.aV, b = st.bV, n = Math.max(1, Math.round(st.n)), eps = st.eps;
+      if (!(b > a)) return { msg: 'a < b となるように入力してください' };
+      const fx = (x) => fn(x, n);
+      let lo = Infinity, hi = -Infinity;
+      [fx, g].forEach((h) => { const [l, u] = autoY(h, a, b, []); lo = Math.min(lo, l); hi = Math.max(hi, u); });
+      lo = Math.min(lo, -eps); hi = Math.max(hi, eps);
+      const F = frame({ W: sz.W, H: sz.H, xmin: a - (b - a) * 0.03, xmax: b + (b - a) * 0.03, ymin: lo - eps, ymax: hi + eps });
+      const N = 600;
+      let up = '', dn = '', sup = 0, xs = a;
+      for (let i = 0; i <= N; i++) {
+        const x = a + (b - a) * i / N, v = g(x);
+        if (isFinite(v)) { up += (up ? 'L' : 'M') + F.X(x).toFixed(1) + ',' + F.Y(v + eps).toFixed(1); dn = 'L' + F.X(x).toFixed(1) + ',' + F.Y(v - eps).toFixed(1) + dn; }
+        const d = Math.abs(fx(x) - v);
+        if (isFinite(d) && d > sup) { sup = d; xs = x; }
+      }
+      // 端点の近くで差が最大になる場合に備えて、端点の少し内側も調べる
+      for (let j = 1; j <= 40; j++) for (const x of [a + (b - a) * Math.pow(2, -j), b - (b - a) * Math.pow(2, -j)]) { const d = Math.abs(fx(x) - g(x)); if (isFinite(d) && d > sup) { sup = d; xs = x; } }
+      let s = `<path d="${up}${dn.replace(/^L/, 'L')}Z" fill="${F.hatchH}" stroke="none" ${F.clip}/>`;
+      s += curve(F, g, a, b, 'curve') + curve(F, fx, a, b, 'curve alt2');
+      s += `<line class="gap" x1="${F.X(xs)}" x2="${F.X(xs)}" y1="${F.Y(g(xs))}" y2="${F.Y(fx(xs))}" ${F.clip}/>`;
+      s += `<line class="curve" x1="${F.L + 10}" x2="${F.L + 34}" y1="${F.T + 10}" y2="${F.T + 10}"/><text class="lab sm" x="${F.L + 40}" y="${F.T + 14}">極限 f</text>`;
+      s += `<line class="curve alt2" x1="${F.L + 100}" x2="${F.L + 124}" y1="${F.T + 10}" y2="${F.T + 10}"/><text class="lab sm" x="${F.L + 130}" y="${F.T + 14}">f_${n}</text>`;
+      return {
+        svg: svgWrap(F, s),
+        out: `sup |f_${n} − f| ≈ ${fmt(sup)}　${sup < eps ? '< ε（帯に収まる）' : '≥ ε（帯からはみ出す）'}`,
+        msg: '',
+        cap: `n = ${n}　sup|fₙ − f| ≈ ${fmt(sup)}`,
+      };
+    },
+  };
+
+  /* ---- ℝ² の ℓᵖ ノルムの単位球 ---- */
+  const pnorm = (u, v, p) => (p === Infinity ? Math.max(Math.abs(u), Math.abs(v)) : Math.pow(Math.pow(Math.abs(u), p) + Math.pow(Math.abs(v), p), 1 / p));
+  TYPES.lpball = {
+    presets: {
+      p2: { label: 'p = 2（ユークリッド）', p: 2 },
+      p1: { label: 'p = 1', p: 1 },
+      pinf: { label: 'p = ∞', p: Infinity },
+      p4: { label: 'p = 4', p: 4 },
+      phalf: { label: 'p = 1/2（ノルムでない）', p: 0.5 },
+    },
+    fields: [{ k: 'p', label: '$p$', kind: 'range', to: (v) => (v === Infinity ? 1000 : Math.round(990 * Math.log(v / 0.3) / Math.log(100))), from: (s) => (s >= 995 ? Infinity : +(0.3 * Math.pow(100, s / 990)).toFixed(2)), show: (st) => (st.p === Infinity ? '∞' : fmt(st.p)) }],
+    draw(st, sz) {
+      const p = st.p, W = sz.W || 680, H = sz.H || 300;
+      const R = 1.35, sc = (H - 40) / (2 * R), cx = W / 2, cy = H / 2;
+      const X = (u) => cx + u * sc, Y = (v) => cy - v * sc;
+      const ball = (q, cls) => {
+        let d = '';
+        for (let i = 0; i <= 720; i++) { const t = 2 * Math.PI * i / 720, c = Math.cos(t), sn = Math.sin(t), r = 1 / pnorm(c, sn, q); d += (i ? 'L' : 'M') + X(r * c).toFixed(1) + ',' + Y(r * sn).toFixed(1); }
+        return `<path class="${cls}" d="${d}Z"/>`;
+      };
+      let s = `<line class="axis" x1="${X(-R * 1.6)}" x2="${X(R * 1.6)}" y1="${cy}" y2="${cy}"/><line class="axis" x1="${cx}" x2="${cx}" y1="${Y(R)}" y2="${Y(-R)}"/>`;
+      s += ball(1, 'curve faint') + ball(2, 'curve faint') + ball(Infinity, 'curve faint');
+      s += `<path class="ballfill" d="${ball(p, '').match(/d="([^"]+)"/)[1]}"/>` + ball(p, 'curve hi');
+      [[1, 0], [0, 1], [-1, 0], [0, -1]].forEach(([u, v]) => (s += `<circle class="pend" cx="${X(u)}" cy="${Y(v)}" r="3"/>`));
+      s += `<text class="lab sm" x="${X(1) + 5}" y="${cy + 13}">1</text><text class="lab sm" x="${cx + 5}" y="${Y(1) - 4}">1</text>`;
+      const m = pnorm(0.5, 0.5, p);
+      if (p < 1) {
+        s += `<line class="chord" x1="${X(1)}" y1="${Y(0)}" x2="${X(0)}" y2="${Y(1)}"/><circle class="pin" cx="${X(0.5)}" cy="${Y(0.5)}" r="4"/><text class="lab acc" x="${X(0.5) + 7}" y="${Y(0.5) - 6}">(1/2, 1/2)</text>`;
+      }
+      s += `<text class="lab sm" x="${W - 12}" y="${H - 12}" text-anchor="end">点線：p = 1, 2, ∞ の単位球</text>`;
+      return {
+        svg: `<svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg>`,
+        out: p >= 1 ? `p = ${p === Infinity ? '∞' : fmt(p)} ≥ 1：単位球は凸（三角不等式が成り立つ）` : `p = ${fmt(p)} < 1：‖(1/2, 1/2)‖ = ${fmt(m)} > 1 なので凸でない（三角不等式が破れる）`,
+        msg: '', cap: '',
+      };
+    },
+  };
+
+  /* ---- 反復 x_{k+1} = Φ(x_k)（クモの巣図） ---- */
+  TYPES.cobweb = {
+    presets: {
+      cos: { label: 'Φ(x) = cos x（縮小写像）', expr: 'cos(x)', x0: '0.1', a: '0', b: '1.2', k: 8 },
+      half: { label: 'Φ(x) = x/2 + 1', expr: 'x/2+1', x0: '-0.5', a: '-1', b: '3', k: 8 },
+      sqrt: { label: 'Φ(x) = √(x + 2)', expr: 'sqrt(x+2)', x0: '0', a: '-0.5', b: '3', k: 6 },
+      expand: { label: 'Φ(x) = 2x − 1（縮小でない）', expr: '2x-1', x0: '1.05', a: '0', b: '2', k: 5 },
+    },
+    fields: [
+      { k: 'expr', label: '$\\Phi(x) =$', kind: 'text', w: 130 },
+      { k: 'x0', label: '$x_0 =$', kind: 'num' },
+      { k: 'a', label: '$a =$', kind: 'num' },
+      { k: 'b', label: '$b =$', kind: 'num' },
+      { k: 'k', label: '反復回数 $k$', kind: 'range', ...intRange(0, 30), show: (st) => String(Math.round(st.k)) },
+    ],
+    draw(st, sz) {
+      const f = st.fn, a = st.aV, b = st.bV, K = Math.round(st.k);
+      if (!(b > a)) return { msg: 'a < b となるように入力してください' };
+      const xs = [st.x0V];
+      for (let i = 0; i < K; i++) xs.push(f(xs[i]));
+      if (!xs.every(isFinite)) return { msg: '途中で値が定まらなくなった' };
+      const F = frame({ W: sz.W, H: sz.H || 280, xmin: a, xmax: b, ymin: a, ymax: b });
+      let s = seg(F, a, a, b, b, 'aline') + curve(F, f, a, b, 'curve');
+      let d = `M${F.X(xs[0]).toFixed(1)},${F.Y(Math.max(a, Math.min(b, 0))).toFixed(1)}`;
+      for (let i = 0; i < K; i++) d += `L${F.X(xs[i]).toFixed(1)},${F.Y(xs[i + 1]).toFixed(1)}L${F.X(xs[i + 1]).toFixed(1)},${F.Y(xs[i + 1]).toFixed(1)}`;
+      s += `<path class="subline" d="${d}" ${F.clip}/>`;
+      xs.forEach((v, i) => { if (v >= a && v <= b) s += dot(F, v, v, i === xs.length - 1 ? 'pin' : 'pnav', i === xs.length - 1 ? 4.5 : 2.8); });
+      s += text(F, b, b, 'y = x', 'sm', 'end', -4, 14);
+      const last = xs[xs.length - 1], prev = xs.length > 1 ? xs[xs.length - 2] : NaN;
+      return {
+        svg: svgWrap(F, s),
+        out: `x_${K} = ${fmt(last)}` + (K ? `　|x_${K} − x_${K - 1}| = ${fmt(Math.abs(last - prev))}` : ''),
+        msg: '', cap: '',
+      };
+    },
+  };
+
+  /* ---- フーリエ級数の部分和 ---- */
+  TYPES.fourier = {
+    presets: {
+      sq: { label: '矩形波 sign x', expr: 'sign(x)', N: 5 },
+      saw: { label: 'のこぎり波 x', expr: 'x', N: 5 },
+      abs: { label: '|x|', expr: 'abs(x)', N: 3 },
+      par: { label: 'x²', expr: 'x^2', N: 3 },
+    },
+    fields: [
+      { k: 'expr', label: '$f(x) =$', kind: 'text', w: 150 },
+      { k: 'N', label: '$N$', kind: 'range', ...intRange(0, 60), show: (st) => String(Math.round(st.N)) },
+    ],
+    play: { k: 'N', from: 0, to: 60, linear: true, label: 'N を増やす' },
+    frames: () => [{ N: 1 }, { N: 5 }, { N: 25 }],
+    draw(st, sz) {
+      const f = st.fn, N = Math.round(st.N), M = 3000, h = 2 * Math.PI / M, PI = Math.PI;
+      const xs = [], fv = [];
+      for (let j = 0; j < M; j++) { const x = -PI + (j + 0.5) * h; xs.push(x); fv.push(f(x)); }
+      if (!fv.every(isFinite)) return { msg: '(−π, π) の中で値が定まらない点がある' };
+      const ak = [], bk = [];
+      for (let k = 0; k <= N; k++) {
+        let sa = 0, sb = 0;
+        for (let j = 0; j < M; j++) { sa += fv[j] * Math.cos(k * xs[j]); sb += fv[j] * Math.sin(k * xs[j]); }
+        ak.push(sa * h / PI); bk.push(sb * h / PI);
+      }
+      const S = (x) => { let v = ak[0] / 2; for (let k = 1; k <= N; k++) v += ak[k] * Math.cos(k * x) + bk[k] * Math.sin(k * x); return v; };
+      let l2 = 0;
+      for (let j = 0; j < M; j++) { const d = fv[j] - S(xs[j]); l2 += d * d * h; }
+      const [lo, hi] = autoY(f, -PI, PI, [S(0), S(PI / 2), S(-PI / 2)]);
+      const F = frame({ W: sz.W, H: sz.H, xmin: -PI - 0.15, xmax: PI + 0.15, ymin: lo, ymax: hi });
+      let s = curve(F, f, -PI + 1e-6, PI - 1e-6, 'curve') + curve(F, S, -PI, PI, 'curve alt2', 1200);
+      s += `<line class="curve" x1="${F.L + 10}" x2="${F.L + 34}" y1="${F.T + 10}" y2="${F.T + 10}"/><text class="lab sm" x="${F.L + 40}" y="${F.T + 14}">f</text>`;
+      s += `<line class="curve alt2" x1="${F.L + 70}" x2="${F.L + 94}" y1="${F.T + 10}" y2="${F.T + 10}"/><text class="lab sm" x="${F.L + 100}" y="${F.T + 14}">部分和 S_${N}</text>`;
+      return {
+        svg: svgWrap(F, s),
+        out: `‖f − S_${N}‖₂² ≈ ${fmt(l2)}`,
+        msg: '',
+        cap: `N = ${N}　‖f − S_N‖₂² ≈ ${fmt(l2)}`,
+      };
+    },
+  };
+
   /* ================= 図の組み立て ================= */
   function mountFig(el, spec) {
     const T = TYPES[spec.type];
@@ -744,6 +1007,7 @@
       st.fn = st.exprFn;
       for (const fd of T.fields) {
         if (fd.kind !== 'num' || (fd.hideIf && fd.hideIf(st))) continue;
+        if (fd.optional && !String(st[fd.k]).trim()) { st[fd.k + 'V'] = null; continue; }
         try { st[fd.k + 'V'] = num(st[fd.k]); }
         catch (e) { msg.textContent = e.message; const i = el.querySelector(`input[data-k="${fd.k}"]`); if (i) i.classList.add('bad'); return false; }
       }

@@ -84,7 +84,7 @@ $$|x|:=\begin{cases}x & (x\ge0)\\ -x & (x<0)\end{cases}$$
     title: '上限・下限',
     sub: '実数の連続性',
     yomi: 'じょうげん・かげん',
-    aliases: ['じょうげん', 'かげん', 'sup', 'inf', 'じょうげんこうり', '上限公理', 'じつすうのれんぞくせい', '実数の連続性', 'あるきめですのげんり', 'アルキメデスの原理', '上界', 'じょうかい', '下界', 'かかい', '最大値', 'さいだいち', 'max'],
+    aliases: ['じょうげん', 'かげん', 'sup', 'inf', 'ちゅうみつ', '稠密', 'ちゅうみつせい', '整数部分', 'せいすうぶぶん', 'がうすきごう', 'ガウス記号', 'ゆうりすう', '有理数', 'じょうげんこうり', '上限公理', 'じつすうのれんぞくせい', '実数の連続性', 'あるきめですのげんり', 'アルキメデスの原理', '上界', 'じょうかい', '下界', 'かかい', '最大値', 'さいだいち', 'max'],
     kind: '用語',
     field: '実数',
     grade: '1年前期',
@@ -149,6 +149,30 @@ $$|x|:=\begin{cases}x & (x\ge0)\\ -x & (x<0)\end{cases}$$
       { t: 'cor', id: 'cor-arch', title: '1/N はいくらでも小さくできる', yomi: 'あるきめですのげんりのけい', imp: 2, text: R`任意の $\varepsilon>0$ に対し、$\dfrac1N<\varepsilon$ をみたす $N=N(\varepsilon)\in\mathbb{N}$ が存在する。` },
       { t: 'proof', steps: [{ text: R`アルキメデスの原理を $x=\frac1\varepsilon\in\mathbb{R}$ に使うと、$N>\frac1\varepsilon$ となる $N\in\mathbb{N}$ がある。両辺に正の数 $\frac\varepsilon N$ を掛けて $\varepsilon>\frac1N$。` }] },
       { t: 'note', title: '「N = N(ε)」という書き方', text: R`$N(\varepsilon)$ は「$N$ は $\varepsilon$ に応じて決まる」ことを表す書き方で、$N$ が $\varepsilon$ の関数であるという意味である。$\varepsilon$ を小さくすると、それに応じて $N$ を大きくとり直してよい。` },
+      { t: 'h2', id: 'dense', text: '整数部分と有理数の稠密性' },
+      { t: 'prop', id: 'prop-floor', title: '整数部分（ガウス記号）', yomi: 'せいすうぶぶん', imp: 2, text: R`任意の $y\in\mathbb{R}$ に対し、$m\le y<m+1$ をみたす $m\in\mathbb{Z}$ がただ一つ存在する。この $m$ を $\lfloor y\rfloor$（または $[y]$）と書き、$y$ の<b class="term">整数部分</b>という。` },
+      {
+        t: 'proof',
+        steps: [
+          { text: R`<b>存在。</b>アルキメデスの原理より $N_2>-y$ となる $N_2\in\mathbb{N}$ があり、$y+N_2>0$。さらにアルキメデスの原理より、集合 $A:=\{k\in\mathbb{N}\mid k>y+N_2\}$ は空でない。$\mathbb{N}$ の空でない部分集合は最小元をもつ（<b class="term">整列性</b>。[[proof-methods#thm-induction|数学的帰納法]]と同値な $\mathbb{N}$ の性質）ので、$k_0:=\min A$ がとれる。` },
+          { text: R`$k_0\in A$ より $k_0>y+N_2$。また $k_0-1\le y+N_2$ である：$k_0\ge2$ なら $k_0-1\in\mathbb{N}$ は $k_0$ より小さいので $A$ に属さず、$k_0-1\le y+N_2$。$k_0=1$ なら $k_0-1=0<y+N_2$。よって $m:=k_0-1-N_2\in\mathbb{Z}$ とおけば $m\le y<m+1$。` },
+          { text: R`<b>一意性。</b>$m,m'\in\mathbb{Z}$ がともに条件をみたすとすると、$m\le y<m'+1$ と $m'\le y<m+1$ から $m-m'<1$ かつ $m'-m<1$。整数の差で絶対値が $1$ 未満のものは $0$ だけなので $m=m'$。` },
+        ],
+      },
+      { t: 'prop', id: 'prop-dense', title: '有理数・無理数の稠密性', yomi: 'ゆうりすうのちゅうみつせい', imp: 2, text: R`$p,q\in\mathbb{R}$, $p<q$ ならば、$p<r<q$ をみたす有理数 $r\in\mathbb{Q}$ と、$p<s<q$ をみたす無理数 $s\in\mathbb{R}\setminus\mathbb{Q}$ が存在する。` },
+      {
+        t: 'proof',
+        sketch: R`目盛りの間隔 $\frac1n$ を区間の幅 $q-p$ より細かくすれば、目盛り $\frac mn$ のどれかが必ず区間に落ちる。`,
+        steps: [
+          { text: R`<b>有理数。</b>$q-p>0$ なので、[[supremum#cor-arch|アルキメデスの原理の系]]より $\frac1n<q-p$ となる $n\in\mathbb{N}$ がある。$m:=\lfloor np\rfloor+1\in\mathbb{Z}$ とおくと、[[supremum#prop-floor|整数部分]]の定義より $m-1\le np<m$。` },
+          {
+            text: R`$r:=\frac mn\in\mathbb{Q}$ とおくと、$np<m$ より $p<r$ で、`,
+            eqs: [[R`r=\frac mn\le\frac{np+1}n=p+\frac1n<p+(q-p)=q.`, R`$m\le np+1$ と $\frac1n<q-p$`]],
+          },
+          { text: R`<b>無理数。</b>今示したことを区間 $(p-\sqrt2,\ q-\sqrt2)$ に使うと、$p-\sqrt2<r<q-\sqrt2$ をみたす $r\in\mathbb{Q}$ がある。$s:=r+\sqrt2$ とおけば $p<s<q$。もし $s\in\mathbb{Q}$ なら $\sqrt2=s-r\in\mathbb{Q}$ となり、[[proof-methods#ex-sqrt2|√2 は無理数]]であることに矛盾する。よって $s$ は無理数である。` },
+        ],
+      },
+      { t: 'note', title: '「どんな短い区間にも」が大事', text: R`この命題から、どんな区間 $(p,q)$（$p<q$）にも有理数と無理数が<em>無数に</em>含まれることがわかる（一つ見つけたら、その左右の小区間にまた適用すればよい）。[[continuity#ex-dirichlet|ディリクレ関数]]がいたるところ不連続であること、[[riemann-integral#ex-dirichlet-int|リーマン積分できない]]ことの根拠になる。` },
     ],
   });
 
