@@ -64,6 +64,12 @@
     }
     return out + links(s.slice(last));
   }
+  /* 記事冒頭の「このページで使う記号」メモ（開閉式） */
+  function symNote(art) {
+    if (!art.notation || !art.notation.length) return '';
+    const id = uid();
+    return `<div class="note symnote"><button type="button" class="note-h" aria-expanded="false" data-tg="${id}"><span class="cap">Notation</span><span class="capjp">記号</span><span class="t">このページで使う記号と約束</span><span class="ar">▾</span></button><div class="collapsible note-b" id="${id}" hidden><ul class="symlist">${art.notation.map((n) => `<li>${rich(n)}</li>`).join('')}</ul></div></div>`;
+  }
   const para = (h) => (/<(ol|ul|div)\b/.test(h) ? `<div class="txt">${h}</div>` : `<p>${h}</p>`);
   window.renderMathIn = function (el) {
     el.querySelectorAll('label').forEach((lb) => {
@@ -107,6 +113,17 @@
         case 'note': {
           const id = uid();
           html += `<div class="note"><button type="button" class="note-h" aria-expanded="false" data-tg="${id}"><span class="cap">Note</span><span class="capjp">メモ</span><span class="t">${rich(b.title)}</span><span class="ar">▾</span></button><div class="collapsible note-b" id="${id}" hidden>${para(rich(b.text, ctx))}</div></div>`;
+          break;
+        }
+        case 'html': {
+          const no = book ? `${o.ch}.${++o.cnt.fig}` : `${++o.cnt.fig}`;
+          html += `<figure class="fig plain">${b.html}${b.caption ? `<figcaption><span class="fno">図 ${no}</span>${rich(b.caption)}</figcaption>` : ''}</figure>`;
+          break;
+        }
+        case 'table': html += `<div class="tblwrap">${rich(b.html, ctx)}</div>`; break;
+        case 'qa': {
+          const id = uid();
+          html += `<div class="qa"><button type="button" class="qa-q" aria-expanded="false" data-tg="${id}"><span class="qm">Q</span><span class="qt">${rich(b.q, ctx)}</span><span class="ar">▾</span></button><div class="collapsible qa-a" id="${id}" hidden><span class="am">A</span><div class="qa-body">${para(rich(b.a, ctx))}</div></div></div>`;
           break;
         }
         case 'fig': {
@@ -356,12 +373,13 @@
     return `<div class="toc-h">${esc(title || '目次')}</div><ol>${toc.map((s) => `<li><a href="#${s.id}" data-spy="${s.id}"><span class="lbl">${s.label}</span>${esc(s.title)}</a>${s.children.length ? `<ol>${s.children.map((c) => `<li><a href="#${c.id}" data-spy="${c.id}"><span class="lbl">${c.label}</span>${rich(c.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}</ol>`;
   }
   function tocTools(withPdf) {
-    return `<div class="toc-tools"><button type="button" class="js-open-proofs">証明をすべて開く</button><button type="button" class="js-open-notes">メモをすべて開く</button><button type="button" class="js-close-all">すべて閉じる</button>${withPdf ? '<button type="button" class="js-pdf">PDF で保存</button><button type="button" class="js-split">並べて表示</button>' : ''}</div>`;
+    return `<div class="toc-tools"><button type="button" class="js-open-proofs">証明をすべて開く</button><button type="button" class="js-open-notes">メモをすべて開く</button><button type="button" class="js-open-qa">Q&amp;A をすべて開く</button><button type="button" class="js-close-all">すべて閉じる</button>${withPdf ? '<button type="button" class="js-pdf">PDF で保存</button><button type="button" class="js-split">並べて表示</button>' : ''}</div>`;
   }
   function bindTocTools() {
     document.addEventListener('click', (e) => {
       if (e.target.closest('.js-open-proofs')) setAll('.proof-ctl [data-tg]', true);
       if (e.target.closest('.js-open-notes')) setAll('.note-h[data-tg]', true);
+      if (e.target.closest('.js-open-qa')) setAll('.qa-q[data-tg]', true);
       if (e.target.closest('.js-close-all')) setAll('[data-tg]', false);
       if (e.target.closest('.toc a') || e.target.closest('.drawer-ov')) document.documentElement.classList.remove('drawer');
     });
@@ -390,7 +408,7 @@
   /* ---------------- PDF 設定 ---------------- */
   const PDF_OPTS = [
     ['sketch', '概略の証明', true], ['full', '厳密な証明', true], ['why', '「なぜ？」の補足', false], ['note', 'メモ', true],
-    ['fig', 'グラフ・図', true], ['prob', '問題', true], ['hint', 'ヒント', false], ['ans', '解答', false], ['space', '解答欄（広め）', true],
+    ['fig', 'グラフ・図', true], ['qa', 'Q&A の答え', true], ['prob', '問題', true], ['hint', 'ヒント', false], ['ans', '解答', false], ['space', '解答欄（広め）', true],
   ];
   function pdfModalHTML(what) {
     if (HOSTED) {
@@ -490,6 +508,7 @@
         <div class="meta"><span class="chip kind">${esc(art.kind)}</span><span class="chip">分野：${esc(art.field)}</span>${art.grade ? `<span class="chip">学年：${esc(art.grade)}</span>` : ''}${impChip}${art.status === 'wip' ? '<span class="chip wip">作成中</span>' : ''}</div>
         ${art.prereq && art.prereq.length ? `<div class="prereq"><span class="lbl">このページを読む前に</span>${art.prereq.map((p) => links('[[' + p + ']]')).join('')}</div>` : ''}
         <div class="synopsis"><span class="cap">Synopsis</span><span class="capjp">梗概</span><p>${rich(art.synopsis)}</p></div>
+        ${symNote(art)}
         ${r.html}
       </article>
       <aside class="rel">
@@ -538,7 +557,7 @@
       let html = r.html.replace(/data-fig="(\d+)"/g, (m, k) => `data-fig="${allFigs.length - r.figs.length + +k}"`);
       toc.push({ id: 'sec-' + sid, label: `${no}.${i + 1}`, title: art.title, children: r.toc.map((s) => ({ id: s.id, label: s.label, title: s.title })) });
       body += `<section class="book-section" id="sec-${sid}"><h2 class="sec"><span class="n">${no}.${i + 1}</span>${esc(art.title)}<a class="to-dict ui" href="article.html?id=${sid}">辞書で開く ↗</a></h2>
-        <div class="synopsis"><span class="cap">Synopsis</span><span class="capjp">梗概</span><p>${rich(art.synopsis)}</p></div>${html}</section>`;
+        <div class="synopsis"><span class="cap">Synopsis</span><span class="capjp">梗概</span><p>${rich(art.synopsis)}</p></div>${symNote(art)}${html}</section>`;
     });
     const prev = BOOK.filter((x) => x.no < no && x.sections.length).pop();
     const next = BOOK.find((x) => x.no > no && x.sections.length);
