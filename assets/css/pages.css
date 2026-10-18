@@ -1,5 +1,5 @@
 /* ---------- 共通の小物 ---------- */
-.capjp{font-family:var(--f-jp);font-size:11px;color:var(--muted);letter-spacing:.25em;margin:0 10px 0 6px}
+.capjp{font-family:var(--f-jp);font-size:11px;color:var(--muted);letter-spacing:.25em;margin:0 10px 0 6px;white-space:nowrap}
 .box-body>.txt{margin:5px 0}
 .box.thm .box-body>.txt,.box.prop .box-body>.txt{font-style:italic}
 code{font-family:var(--f-mono);font-size:.88em;background:#f1ead6;padding:0 4px;border-radius:3px}
@@ -40,7 +40,7 @@ code{font-family:var(--f-mono);font-size:.88em;background:#f1ead6;padding:0 4px;
 .idx-list li a{display:grid;grid-template-columns:62px 1fr auto;grid-template-areas:"k t w" "k y w";column-gap:12px;padding:7px 4px;border-bottom:1px solid var(--rule2)}
 .idx-list li a:hover{background:#fbf3d3}
 .idx-list .k{grid-area:k;align-self:center;justify-self:start;font-family:var(--f-mono);font-size:10.5px;padding:0 6px;border:1px solid currentColor;border-radius:3px}
-.idx-list .k.def{color:var(--def)} .idx-list .k.thm{color:var(--thm)} .idx-list .k.prop{color:var(--prop)} .idx-list .k.cor,.idx-list .k.lem{color:var(--cor)} .idx-list .k.ax{color:#1a1a1a}
+.idx-list .k.def{color:var(--def)} .idx-list .k.thm{color:var(--thm)} .idx-list .k.prop{color:var(--prop)} .idx-list .k.cor,.idx-list .k.lem{color:var(--cor)} .idx-list .k.ax{color:var(--ax)}
 .idx-list .t{grid-area:t;font-weight:600}
 .idx-list .y{grid-area:y;font-size:11px;color:var(--muted)}
 .idx-list .w{grid-area:w;align-self:center;font-size:11.5px;color:var(--muted)}

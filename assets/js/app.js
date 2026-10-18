@@ -1,8 +1,8 @@
-/* 解析学事典 — 描画・検索・ナビゲーション */
+/* 解析学大全 — 描画・検索・ナビゲーション */
 (function () {
   'use strict';
 
-  const SITE = { jp: '解析学事典', en: 'Analysis Compendium' };
+  const SITE = { jp: '解析学大全', en: 'Analysis Compendium' };
   const ARTS = window.ARTICLES || [];
   const BOOK = window.BOOK || [];
   const byId = Object.fromEntries(ARTS.map((a) => [a.id, a]));
@@ -154,7 +154,7 @@
   function mountFigs(root, figs) {
     root.querySelectorAll('.g[data-fig]').forEach((el) => {
       const spec = figs[+el.dataset.fig];
-      if (spec && spec.type === 'seq' && window.Graph) window.Graph.mountSeq(el, spec);
+      if (spec && window.Graph) window.Graph.mount(el, spec);
     });
   }
 
@@ -432,12 +432,7 @@
     const re = new RegExp('\\[\\[' + id.replace(/[-]/g, '\\-') + '[\\]|#]');
     return ARTS.filter((a) => a.id !== id && JSON.stringify(a.body).match(re));
   }
-  function setLabelStyle() {
-    const l = params.get('label') || store.get('label', 'A');
-    document.documentElement.dataset.label = l;
-  }
   function common(cur) {
-    setLabelStyle();
     bindHeader();
     bindTabs(cur);
     bindTocTools();
@@ -491,7 +486,7 @@
       </article>
       <aside class="rel">
         <div class="rel-sec"><div class="rel-h">関連ページ</div>${(art.related || []).map((p) => links('[[' + p + ']]')).join('') || '<span class="ui" style="color:var(--muted)">なし</span>'}</div>
-        <div class="rel-sec"><div class="rel-h">このページの番号</div><div class="num-list">${r.nums.map((n) => `<a href="#${n.id}" style="color:var(--${n.kind === 'problem' ? 'prob' : n.kind === 'ax' ? 'ink' : n.kind})">${n.label}</a>`).join('')}</div></div>
+        <div class="rel-sec"><div class="rel-h">このページの番号</div><div class="num-list">${r.nums.map((n) => `<a href="#${n.id}" style="color:var(--${n.kind === 'problem' ? 'prob' : n.kind})">${n.label}</a>`).join('')}</div></div>
         ${chap ? `<div class="rel-sec"><div class="rel-h">教科書で読む</div><a href="book.html?ch=${chap.ch.no}#sec-${id}">第 ${chap.ch.no} 章　${esc(chap.ch.title)} §${chap.ch.no}.${chap.idx}</a></div>` : ''}
         <div class="rel-sec"><div class="rel-h">このページを参照しているページ</div>${back.map((a) => `<a href="article.html?id=${a.id}">${esc(a.title)}</a>`).join('') || '<span style="color:var(--muted)">なし</span>'}</div>
       </aside>
@@ -691,7 +686,6 @@
       <footer class="home-foot ui">${SITE.jp}　個人用の解析学リファレンス　・　<a href="sakuin.html">索引</a>　・　<a href="book.html">教科書</a></footer>
     </div>`;
     app.innerHTML = main;
-    setLabelStyle();
     bindTabs('home');
     bindPeek();
     const inp = app.querySelector('.bigsearch input');

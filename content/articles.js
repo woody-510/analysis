@@ -83,6 +83,60 @@ $$\forall M\in\mathbb{R},\ \exists N\in\mathbb{N}\ \text{ s.t. }\ \forall n\ge N
       },
       { t: 'rem', title: '逆は成り立たない', text: R`有界であっても収束するとは限らない。たとえば $a_n=(-1)^n$ は $|a_n|\le1$ で有界だが、$1$ と $-1$ を行き来し続けるので収束しない（下の [[sequence-convergence#ex-osc|例]] を参照）。有界に加えて「単調」であれば収束する。これが [[monotone-convergence]] である。` },
 
+      { t: 'prop', id: 'prop-arith', title: '極限の四則演算', yomi: 'きょくげんのしそくえんざん', imp: 2, text: R`$a_n\to\alpha$、$b_n\to\beta$ とする。このとき次が成り立つ。
+<ol><li>$a_n+b_n\to\alpha+\beta$</li><li>$a_nb_n\to\alpha\beta$</li><li>$\beta\ne0$ ならば、十分大きいすべての $n$ で $b_n\ne0$ であり、$\dfrac{a_n}{b_n}\to\dfrac{\alpha}{\beta}$</li></ol>` },
+      { t: 'strategy', text: R`和は誤差を $\varepsilon/2$ ずつ配分する。積は $a_nb_n-\alpha\beta=a_n(b_n-\beta)+\beta(a_n-\alpha)$ と<em>一方ずつ動かす</em>形に分け、$a_n$ を[[sequence-convergence#prop-bdd|有界性]]で抑える。商は $1/b_n\to1/\beta$ を示せば積に帰着する。` },
+      {
+        t: 'proof',
+        sketch: R`どれも「目標の差」を「仮定で小さくできる差」の和に分解し、それぞれを $\varepsilon$ の何分の一かに抑える。商では、$b_n$ が $0$ に近づきすぎないこと（$|b_n|>|\beta|/2$）を先に確保するのが要点である。`,
+        steps: [
+          { text: R`<b>和</b>：$\varepsilon>0$ を任意にとる。$n\ge N_1$ で $|a_n-\alpha|<\varepsilon/2$、$n\ge N_2$ で $|b_n-\beta|<\varepsilon/2$ となる $N_1,N_2$ をとる。$n\ge\max\{N_1,N_2\}$ ならば`,
+            eqs: [[R`|(a_n+b_n)-(\alpha+\beta)| \le |a_n-\alpha|+|b_n-\beta| < \tfrac{\varepsilon}{2}+\tfrac{\varepsilon}{2}=\varepsilon.`, R`三角不等式`]] },
+          { text: R`<b>積</b>：収束列は有界なので、すべての $n$ で $|a_n|\le M$ となる $M>0$ がある。すると`,
+            eqs: [
+              [R`|a_nb_n-\alpha\beta| = |a_n(b_n-\beta)+\beta(a_n-\alpha)|`, R`$a_n\beta$ を引いて足す`],
+              [R`\phantom{|a_nb_n-\alpha\beta|} \le |a_n|\,|b_n-\beta|+|\beta|\,|a_n-\alpha|`, R`三角不等式`],
+              [R`\phantom{|a_nb_n-\alpha\beta|} \le M|b_n-\beta|+|\beta|\,|a_n-\alpha|.`, R`$|a_n|\le M$`],
+            ] },
+          { text: R`$\varepsilon>0$ に対し、$n\ge N_3$ で $|b_n-\beta|<\dfrac{\varepsilon}{2M}$、$n\ge N_4$ で $|a_n-\alpha|<\dfrac{\varepsilon}{2(|\beta|+1)}$ となるようにとる。$n\ge\max\{N_3,N_4\}$ ならば、上の式は $\dfrac{\varepsilon}{2}+\dfrac{|\beta|}{|\beta|+1}\cdot\dfrac{\varepsilon}{2}<\varepsilon$ となる。`,
+            why: R`$|\beta|$ で割らずに $|\beta|+1$ で割るのは、$\beta=0$ のときに $0$ で割ってしまうのを避けるためである。$\dfrac{|\beta|}{|\beta|+1}<1$ なので、これで十分小さくなる。` },
+          { text: R`<b>商</b>：$\beta\ne0$ とする。$\varepsilon=|\beta|/2>0$ として収束の定義を使うと、$n\ge N_5$ で $|b_n-\beta|<|\beta|/2$。このとき $|b_n|>|\beta|/2>0$ なので $b_n\ne0$ である。`,
+            why: R`[[abs-triangle#cor-rev|逆向きの三角不等式]]より $|b_n|\ge|\beta|-|\beta-b_n|>|\beta|-\dfrac{|\beta|}{2}=\dfrac{|\beta|}{2}$。$b_n$ が $\beta$ の近くにいれば、$0$ からも離れている、ということである。` },
+          { text: R`$n\ge N_5$ のとき`,
+            eqs: [
+              [R`\left|\frac1{b_n}-\frac1\beta\right| = \frac{|\beta-b_n|}{|b_n|\,|\beta|}`, R`通分する`],
+              [R`\phantom{\left|\frac1{b_n}-\frac1\beta\right|} < \frac{2}{|\beta|^2}\,|b_n-\beta|.`, R`$|b_n|>|\beta|/2$`],
+            ] },
+          { text: R`$\varepsilon>0$ に対し $n\ge N_6$ で $|b_n-\beta|<\dfrac{|\beta|^2}{2}\varepsilon$ となるようにとれば、$n\ge\max\{N_5,N_6\}$ で $\left|\frac1{b_n}-\frac1\beta\right|<\varepsilon$。よって $\frac1{b_n}\to\frac1\beta$ であり、積の結果と合わせて $\frac{a_n}{b_n}=a_n\cdot\frac1{b_n}\to\frac\alpha\beta$。` },
+        ],
+      },
+      { t: 'prop', id: 'prop-order', title: '極限と不等式', yomi: 'きょくげんとふとうしき', imp: 2, text: R`$a_n\to\alpha$、$b_n\to\beta$ で、すべての $n$ について $a_n\le b_n$ ならば、$\alpha\le\beta$ である。` },
+      { t: 'strategy', text: R`背理法。$\alpha>\beta$ と仮定し、二つの極限のちょうど真ん中 $\frac{\alpha+\beta}{2}$ で線を引く。十分先では $a_n$ はその上、$b_n$ はその下にあるので、$a_n\le b_n$ に反する。` },
+      {
+        t: 'proof',
+        sketch: R`$\varepsilon=\frac{\alpha-\beta}{2}$ にとると、二つの $\varepsilon$ 帯は重ならない。十分先の $a_n$ は上の帯、$b_n$ は下の帯にいるので $b_n<a_n$ となり矛盾。`,
+        steps: [
+          { text: R`$\alpha>\beta$ と仮定し、$\varepsilon=\dfrac{\alpha-\beta}{2}>0$ とおく。十分大きい $N$ をとると、$n\ge N$ で $|a_n-\alpha|<\varepsilon$ かつ $|b_n-\beta|<\varepsilon$。` },
+          { text: R`このとき`,
+            eqs: [
+              [R`a_n > \alpha-\varepsilon = \tfrac{\alpha+\beta}{2}`, R`$|a_n-\alpha|<\varepsilon$ の左半分`],
+              [R`b_n < \beta+\varepsilon = \tfrac{\alpha+\beta}{2}`, R`$|b_n-\beta|<\varepsilon$ の右半分`],
+            ] },
+          { text: R`したがって $b_n<a_n$ となり、仮定 $a_n\le b_n$ に矛盾する。よって $\alpha\le\beta$。` },
+        ],
+      },
+      { t: 'rem', title: '「<」は極限で「≤」に変わる', text: R`すべての $n$ で $a_n<b_n$ でも、$\alpha<\beta$ とは限らない。たとえば $a_n=0$、$b_n=\frac1n$ は $a_n<b_n$ だが、極限はどちらも $0$ である。極限をとると、厳密な不等号は等号つきに弱まりうる。` },
+      { t: 'cor', id: 'cor-squeeze', title: 'はさみうちの原理', yomi: 'はさみうちのげんり', imp: 2, text: R`すべての $n$ で $a_n\le c_n\le b_n$ であり、$a_n\to\alpha$、$b_n\to\alpha$ ならば、$c_n\to\alpha$ である。` },
+      {
+        t: 'proof',
+        sketch: R`十分先では $a_n$ も $b_n$ も $\alpha$ の $\varepsilon$ 帯の中にいる。その間に挟まれた $c_n$ も帯の中にいるしかない。`,
+        steps: [
+          { text: R`$\varepsilon>0$ に対し、$n\ge N$ で $|a_n-\alpha|<\varepsilon$ かつ $|b_n-\alpha|<\varepsilon$ となる $N$ をとる。` },
+          { text: R`$n\ge N$ ならば`, eqs: [[R`\alpha-\varepsilon < a_n \le c_n \le b_n < \alpha+\varepsilon`, R`$N$ の取り方と仮定`]] },
+          { text: R`すなわち $|c_n-\alpha|<\varepsilon$。よって $c_n\to\alpha$。` },
+        ],
+      },
+
       { t: 'ex', id: 'ex-inv', title: '1/n → 0', text: R`$\displaystyle\lim_{n\to\infty}\frac1n=0$ を定義に従って示す。$\varepsilon>0$ を任意にとる。[[supremum#thm-arch|アルキメデスの原理]]より $N>\dfrac1\varepsilon$ となる $N\in\mathbb{N}$ がとれる。すると $n\ge N$ のとき
 $$\left|\frac1n-0\right|=\frac1n\le\frac1N<\varepsilon.$$
 よって $\dfrac1n\to0$ である。` },
@@ -236,6 +290,72 @@ $$\exists\varepsilon>0,\ \forall N\in\mathbb{N},\ \exists n\ge N\ \text{ s.t. }\
 
   /* ------------------------------------------------------------ */
   A.push({
+    id: 'bolzano-weierstrass',
+    title: 'ボルツァーノ＝ワイエルシュトラスの定理',
+    sub: '有界数列の収束部分列',
+    yomi: 'ぼるつぁーの・わいえるしゅとらすのていり',
+    aliases: ['ぼるつぁーの', 'わいえるしゅとらす', 'BWの定理', '部分列', 'ぶぶんれつ', '収束部分列', 'しゅうそくぶぶんれつ', '山', 'やま'],
+    kind: '定理',
+    field: '数列と極限',
+    grade: '1年前期',
+    importance: 3,
+    prereq: ['sequence-convergence', 'monotone-convergence'],
+    related: ['cauchy-sequence', 'extreme-value', 'monotone-convergence'],
+    synopsis: R`有界な数列は、それ自身が収束しなくても、<em>収束する部分列</em>を必ずもつ。最大値の定理やコーシー列の収束など、「何かが存在すること」を示す場面で繰り返し使われる。`,
+    body: [
+      { t: 'h2', id: 'subseq', text: '部分列' },
+      { t: 'def', id: 'def-subseq', title: '部分列', yomi: 'ぶぶんれつ', imp: 2, text: R`自然数の狭義単調増加列 $n_1<n_2<n_3<\cdots$ をとり、数列 $\{a_n\}$ から $a_{n_1},a_{n_2},a_{n_3},\dots$ を順に抜き出した数列 $\{a_{n_k}\}_{k\in\mathbb{N}}$ を、$\{a_n\}$ の<b class="term">部分列</b>という。` },
+      { t: 'note', title: '添字が二段になるのに慣れる', text: R`部分列の $k$ 番目の項は $a_{n_k}$ である。$k$ は「部分列の中で何番目か」、$n_k$ は「元の数列で何番目か」を表す。たとえば偶数番目だけを抜き出すと $n_k=2k$ で、部分列は $a_2,a_4,a_6,\dots$ となる。` },
+      { t: 'prop', id: 'prop-subseq-conv', title: '収束列の部分列', yomi: 'しゅうそくれつのぶぶんれつ', imp: 2, text: R`$a_n\to\alpha$ ならば、$\{a_n\}$ の任意の部分列も $\alpha$ に収束する。` },
+      {
+        t: 'proof',
+        sketch: R`$n_k\ge k$ なので、部分列は元の数列より「先へ進むのが速い」。元の数列が $N$ 番目から帯に入るなら、部分列も $k\ge N$ で帯に入る。`,
+        steps: [
+          { text: R`まず、すべての $k$ について $n_k\ge k$ である。`, why: R`帰納法。$n_1\ge1$ は自然数だから成り立つ。$n_k\ge k$ と仮定すると、$n_{k+1}>n_k\ge k$ で、$n_{k+1}$ は整数なので $n_{k+1}\ge k+1$。` },
+          { text: R`$\varepsilon>0$ に対し、$n\ge N$ で $|a_n-\alpha|<\varepsilon$ となる $N$ をとる。$k\ge N$ ならば $n_k\ge k\ge N$ なので $|a_{n_k}-\alpha|<\varepsilon$。よって $a_{n_k}\to\alpha$。` },
+        ],
+      },
+      { t: 'rem', title: '使い方は「対偶」が多い', text: R`この命題は「収束しないこと」を示すのに便利である。異なる値に収束する部分列が二つ見つかれば、元の数列は収束しない。たとえば $(-1)^n$ の偶数番目は $1$、奇数番目は $-1$ に収束するので、$(-1)^n$ は発散する。` },
+
+      { t: 'h2', id: 'stmt', text: '主張' },
+      { t: 'thm', id: 'thm-bw', title: 'ボルツァーノ＝ワイエルシュトラスの定理', yomi: 'ぼるつぁーの・わいえるしゅとらすのていり', imp: 3, text: R`有界な実数列は、収束する部分列をもつ。` },
+      { t: 'strategy', text: R`二段構えで示す。① どんな数列にも単調な部分列がある（[[bolzano-weierstrass#lem-mono|補題]]）。② 有界で単調なら収束する（[[monotone-convergence]]）。①が本題で、「山」という見方を使う。` },
+
+      { t: 'h2', id: 'mono', text: '単調な部分列の存在' },
+      { t: 'lem', id: 'lem-mono', title: '単調部分列の補題', yomi: 'たんちょうぶぶんれつのほだい', imp: 2, text: R`任意の実数列は、単調な（単調増加または単調減少の）部分列をもつ。` },
+      { t: 'p', text: R`番号 $n$ が<b class="term">山</b>であるとは、$a_n$ がそれより後ろのどの項以上でもあること、すなわち「すべての $m>n$ について $a_n\ge a_m$」が成り立つことをいう。山の項からは、後ろを見渡しても自分より高い項がない。` },
+      { t: 'fig', type: 'subseq', preset: 'alt', editable: true, caption: R`▲ が山の項、赤い点と線が取り出した単調部分列。山が無限個あれば山の項を並べるだけで単調減少になる。山が有限個なら、最後の山より後ろから「次の、自分以上の項」をたどって単調増加な部分列を作る。` },
+      { t: 'strategy', text: R`山が無限個あるか、有限個しかないかで場合を分ける。` },
+      {
+        t: 'proof',
+        sketch: R`山が無限個なら、山の番号を小さい順に並べた部分列は単調減少。山が有限個なら、最後の山より後ろの番号はどれも山でないので、「自分以上の項が後ろに必ずある」。これをたどれば単調増加な部分列ができる。`,
+        steps: [
+          { text: R`<b>山が無限個ある場合。</b>山の番号を小さい順に $n_1<n_2<\cdots$ とする。$n_k$ は山で $n_{k+1}>n_k$ なので、$a_{n_k}\ge a_{n_{k+1}}$。よって $\{a_{n_k}\}$ は単調減少な部分列である。` },
+          { text: R`<b>山が有限個しかない場合。</b>最後の山の番号より大きい番号 $n_1$ をとる（山が一つもなければ $n_1=1$）。$n_1$ 以降の番号はどれも山ではない。` },
+          { text: R`$n_1$ は山でないので、$a_{n_2}>a_{n_1}$ となる $n_2>n_1$ が存在する。$n_2$ も山でないので、$a_{n_3}>a_{n_2}$ となる $n_3>n_2$ が存在する。これを繰り返して、$a_{n_1}<a_{n_2}<a_{n_3}<\cdots$ となる部分列が得られる。`, why: R`「$n$ が山でない」は、山の定義「すべての $m>n$ で $a_n\ge a_m$」の否定なので、「ある $m>n$ で $a_n<a_m$」となる（[[logic-quantifiers#prop-neg|否定の規則]]）。つまり後ろに必ず自分より大きい項がある。` },
+        ],
+      },
+      { t: 'h2', id: 'proof', text: '定理の証明' },
+      {
+        t: 'proof',
+        sketch: R`補題で単調な部分列をとる。元の数列が有界なので、部分列も有界。有界な単調列は収束する。`,
+        steps: [
+          { text: R`$\{a_n\}$ を有界な数列とし、すべての $n$ で $|a_n|\le M$ とする。補題より単調な部分列 $\{a_{n_k}\}$ がとれる。` },
+          { text: R`部分列の項も元の数列の項なので $|a_{n_k}|\le M$、すなわち部分列も有界である。` },
+          { text: R`単調増加なら[[monotone-convergence|単調収束定理]]により収束する。単調減少なら、$\{-a_{n_k}\}$ が上に有界な単調増加列なので収束し、$\{a_{n_k}\}$ も収束する。`, why: R`$b_k=-a_{n_k}$ とおくと、$a_{n_k}\ge a_{n_{k+1}}$ は $b_k\le b_{k+1}$ と同じこと。$b_k\to\beta$ なら、[[sequence-convergence#prop-arith|四則演算]]（定数 $-1$ を掛ける）より $a_{n_k}=-b_k\to-\beta$。` },
+        ],
+      },
+      { t: 'crux', text: R`どんな数列にも単調な部分列が<em>隠れている</em>。そして「有界＋単調＝収束」。この二つを組み合わせるだけで、極限の値を一切知らないまま、収束する部分列の存在が保証される。` },
+      { t: 'h2', id: 'ex', text: '例と注意' },
+      { t: 'ex', id: 'ex-bw-alt', title: '(−1)ⁿ(1 + 1/n)', text: R`$a_n=(-1)^n\left(1+\frac1n\right)$ は $|a_n|\le2$ で有界だが収束しない。偶数番目 $a_{2k}=1+\frac1{2k}\to1$、奇数番目 $a_{2k-1}=-1-\frac1{2k-1}\to-1$ が収束する部分列である。` },
+      { t: 'rem', title: '「有界」は外せない', text: R`$a_n=n$ はどんな部分列も $a_{n_k}=n_k\ge k\to\infty$ となり、収束する部分列をもたない。定理の仮定「有界」が本質的であることがわかる。` },
+      { t: 'h2', id: 'problems', text: '問題' },
+      { t: 'problem', id: 'prob-bw-1', level: 1, title: '基本', text: R`$a_n=(-1)^n+\dfrac1n$ について、収束する部分列を二つ挙げ、それぞれの極限を求めよ。また、$\{a_n\}$ が収束しない理由を述べよ。`, hint: R`偶数番目と奇数番目に分ける。`, answer: R`$a_{2k}=1+\frac1{2k}\to1$、$a_{2k-1}=-1+\frac1{2k-1}\to-1$。もし $a_n\to\alpha$ なら、[[bolzano-weierstrass#prop-subseq-conv|部分列も同じ極限に収束する]]ので $\alpha=1$ かつ $\alpha=-1$ となり矛盾する。よって収束しない。`, space: 5 },
+    ],
+  });
+
+  /* ------------------------------------------------------------ */
+  A.push({
     id: 'cauchy-sequence',
     title: 'コーシー列',
     sub: '',
@@ -245,9 +365,8 @@ $$\exists\varepsilon>0,\ \forall N\in\mathbb{N},\ \exists n\ge N\ \text{ s.t. }\
     field: '数列と極限',
     grade: '1年前期',
     importance: 3,
-    status: 'wip',
-    prereq: ['sequence-convergence'],
-    related: ['monotone-convergence'],
+    prereq: ['sequence-convergence', 'bolzano-weierstrass'],
+    related: ['monotone-convergence', 'bolzano-weierstrass'],
     synopsis: R`項どうしが互いにいくらでも近づく数列をコーシー列という。極限の値を使わずに「収束しそうか」を判定できる。実数ではコーシー列は必ず収束する（実数の完備性）。`,
     body: [
       { t: 'h2', id: 'def', text: '定義' },
@@ -266,7 +385,23 @@ $$\forall\varepsilon>0,\ \exists N\in\mathbb{N}\ \text{ s.t. }\ \forall m,n\ge N
         ],
       },
       { t: 'thm', id: 'thm-cauchy-conv', title: 'コーシー列は収束する（実数の完備性）', yomi: 'じつすうのかんびせい', imp: 3, text: R`実数のコーシー列は収束する。` },
-      { t: 'p', text: R`<span class="chip wip">作成中</span> 証明はボルツァーノ＝ワイエルシュトラスの定理のページとあわせて追加する。` },
+      { t: 'strategy', text: R`極限の候補を[[bolzano-weierstrass|ボルツァーノ＝ワイエルシュトラスの定理]]で作る。コーシー列は有界なので収束部分列 $a_{n_k}\to\alpha$ がある。あとは「項どうしが近い」性質で、数列全体を $\alpha$ に引き寄せる。` },
+      {
+        t: 'proof',
+        sketch: R`有界 → 収束部分列がある → 部分列の極限 $\alpha$ の近くに部分列の項があり、十分先の項はその部分列の項に近いので、$\alpha$ にも近い（$\varepsilon/2+\varepsilon/2$）。`,
+        steps: [
+          { text: R`<b>有界であること。</b>定義で $\varepsilon=1$ とすると、$m,n\ge N$ で $|a_m-a_n|<1$。特に $n\ge N$ で $|a_n|\le|a_n-a_N|+|a_N|<1+|a_N|$。$M=\max\{|a_1|,\dots,|a_{N-1}|,\ 1+|a_N|\}$ とおけば、すべての $n$ で $|a_n|\le M$。`, why: R`[[sequence-convergence#prop-bdd|収束列の有界性]]と同じ論法である。「十分先」は $a_N$ の近くに閉じ込め、「最初の有限個」は最大値で抑える。` },
+          { text: R`ボルツァーノ＝ワイエルシュトラスの定理より、収束する部分列 $a_{n_k}\to\alpha$ がとれる。` },
+          { text: R`$\varepsilon>0$ を任意にとる。コーシー列であることから、$m,n\ge N$ で $|a_m-a_n|<\varepsilon/2$ となる $N$ をとる。また $a_{n_k}\to\alpha$ より、$|a_{n_k}-\alpha|<\varepsilon/2$ かつ $n_k\ge N$ となる $k$ を一つとる。`, why: R`$a_{n_k}\to\alpha$ なので、十分大きいすべての $k$ で $|a_{n_k}-\alpha|<\varepsilon/2$。さらに $n_k\ge k$ なので、$k\ge N$ にとれば $n_k\ge N$ もみたす。両方をみたす $k$ が一つあれば十分である。` },
+          { text: R`$n\ge N$ ならば`,
+            eqs: [
+              [R`|a_n-\alpha| \le |a_n-a_{n_k}|+|a_{n_k}-\alpha|`, R`三角不等式`],
+              [R`\phantom{|a_n-\alpha|} < \tfrac{\varepsilon}{2}+\tfrac{\varepsilon}{2}=\varepsilon.`, R`$n,\,n_k\ge N$ と $k$ の取り方`],
+            ] },
+          { text: R`よって $a_n\to\alpha$ である。` },
+        ],
+      },
+      { t: 'crux', text: R`コーシー列の定義には極限の値が出てこない。それでも収束が言えるのは、実数に「穴がない」（上限公理）からである。実際、有理数だけの世界では $\sqrt2$ に近づく有理数列はコーシー列なのに、有理数の中に極限がない。` },
     ],
   });
 })();
