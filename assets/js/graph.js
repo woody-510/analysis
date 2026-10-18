@@ -533,6 +533,8 @@
       inv01: { label: 'y = 1/x on (0, 1]', expr: '1/x', a: '0.04', b: '1', names: ['y = 1/x'] },
       ramps: { label: 'f₁, f₂, f₄（坂が細くなる連続関数）', expr: '(abs(2-2x)-abs(1-2x)+1)/2; (abs(3-4x)-abs(2-4x)+1)/2; (abs(5-8x)-abs(4-8x)+1)/2', a: '0', b: '1', names: ['f₁', 'f₂', 'f₄'] },
       picard: { label: 'u′ = u の逐次近似', expr: 'exp(x); 1+x; 1+x+x^2/2; 1+x+x^2/2+x^3/6', a: '0', b: '2.5', names: ['解 eᵗ', 'u₁ = 1 + t', 'u₂', 'u₃'] },
+      dissdecay: { label: '自由解の減衰と消散による減衰（n = 1）', expr: '1/sqrt(x); 1/sqrt(x(1+log(x)))', a: '1', b: '60', names: ['t^(−1/2)（自由解）', '(t(1 + log t))^(−1/2)（消散型のモデル）'] },
+      kgauss: { label: '⟨ξ⟩^(−2s) の可積分性（n = 1）', expr: '1/(1+x^2)^0.4; 1/(1+x^2); 1/(1+x^2)^2', a: '-8', b: '8', names: ['s = 0.4（積分は発散）', 's = 1', 's = 2'] },
       ftc: { label: 'f = 階段関数、F(x) = ∫₀ˣ f', expr: 'step(x-1); (x-1)step(x-1)', a: '0', b: '2', names: ['f(t)（x = 1 で跳ぶ）', 'F(x) = ∫₀ˣ f(t) dt（x = 1 で折れる）'] },
     },
     fields: [
@@ -1007,6 +1009,81 @@
         svg: svgWrap(F, s),
         out: `ab = ${fmt(lhs)} ≤ aᵖ/p + b^q/q = ${fmt(rhs)}`,
         msg: '', cap: '',
+      };
+    },
+  };
+
+  /* ---- 熱方程式 u_t = u_xx：熱核との畳み込み ---- */
+  TYPES.heat = {
+    presets: {
+      box: { label: '箱型の初期値 χ[−1,1]', expr: 'step(x+1)-step(x-1)', t: 0.05 },
+      two: { label: '二つの山', expr: 'exp(-4(x+2)^2)+exp(-4(x-1.5)^2)', t: 0.05 },
+      kink: { label: '角のある初期値 max(1 − |x|, 0)', expr: '(1-abs(x)+abs(1-abs(x)))/2', t: 0.05 },
+    },
+    fields: [
+      { k: 'expr', label: '$u_0(x) =$', kind: 'text', w: 190 },
+      { k: 't', label: '$t$', kind: 'range', ...logRange(0.001, 5) },
+    ],
+    play: { k: 't', from: 0.001, to: 5, label: '時間を進める' },
+    frames: () => [{ t: 0.01 }, { t: 0.3 }, { t: 2 }],
+    draw(st, sz) {
+      const f = st.fn, t = st.t, a = -6, b = 6, Ly = 9, M = 900, hy = 2 * Ly / M;
+      const ys = [], fy = [];
+      for (let j = 0; j <= M; j++) { const y = -Ly + j * hy; ys.push(y); fy.push(f(y)); }
+      if (!fy.every(isFinite)) return { msg: '初期値の値が定まらない点がある' };
+      const c = 1 / Math.sqrt(4 * Math.PI * t);
+      const u = (x) => { let s = 0; for (let j = 0; j <= M; j++) { const w = j === 0 || j === M ? 0.5 : 1; s += w * Math.exp(-(x - ys[j]) * (x - ys[j]) / (4 * t)) * fy[j]; } return s * hy * c; };
+      const N = 360, X = [], U = [];
+      for (let i = 0; i <= N; i++) { const x = a + (b - a) * i / N; X.push(x); U.push(u(x)); }
+      let lo = Math.min(0, ...fy), hi = Math.max(...fy, ...U); const pad = (hi - lo) * 0.08 || 0.5;
+      const F = frame({ W: sz.W, H: sz.H, xmin: a, xmax: b, ymin: lo - pad, ymax: hi + pad });
+      let s = curve(F, f, a, b, 'curve faint');
+      s += `<path class="curve alt2" d="${X.map((x, i) => (i ? 'L' : 'M') + F.X(x).toFixed(1) + ',' + F.Y(U[i]).toFixed(1)).join('')}" ${F.clip}/>`;
+      const mass0 = fy.reduce((p, v, j) => p + v * (j === 0 || j === M ? 0.5 : 1), 0) * hy;
+      const mass = U.reduce((p, v, i) => p + v * (i === 0 || i === N ? 0.5 : 1), 0) * (b - a) / N;
+      s += `<line class="curve faint" x1="${F.L + 10}" x2="${F.L + 34}" y1="${F.T + 10}" y2="${F.T + 10}"/><text class="lab sm" x="${F.L + 40}" y="${F.T + 14}">初期値 u₀</text>`;
+      s += `<line class="curve alt2" x1="${F.L + 120}" x2="${F.L + 144}" y1="${F.T + 10}" y2="${F.T + 10}"/><text class="lab sm" x="${F.L + 150}" y="${F.T + 14}">u(t, ·)</text>`;
+      return {
+        svg: svgWrap(F, s),
+        out: `max u(t) ≈ ${fmt(Math.max(...U))}　∫u(t) dx ≈ ${fmt(mass)}（初期値 ${fmt(mass0)}）`,
+        msg: '',
+        cap: `t = ${fmt(t)}`,
+      };
+    },
+  };
+
+  /* ---- 自由シュレディンガー方程式 i u_t + u_xx = 0：ガウス型の波束 ---- */
+  TYPES.schrod = {
+    presets: {
+      rest: { label: '止まった波束（k = 0）', k: '0', t: 0.5 },
+      move: { label: '動く波束（k = 2）', k: '2', t: 0.5 },
+    },
+    fields: [
+      { k: 'k', label: '速度の目安 $k=$', kind: 'num' },
+      { k: 't', label: '$t$', kind: 'range', to: (v) => Math.round(v * 200), from: (s) => s / 200, show: (st) => fmt(st.t) },
+    ],
+    play: { k: 't', from: 0, to: 5, linear: true, label: '時間を進める' },
+    frames: () => [{ t: 0 }, { t: 1 }, { t: 3 }],
+    draw(st, sz) {
+      const k = st.kV, t = st.t, a = -10, b = 18;
+      // u(t,x) = e^{ikx − ik²t} v(t, x − 2kt),  v(t,y) = (1+2it)^{−1/2} exp(−y²/(2(1+2it)))
+      const den = 1 + 4 * t * t;
+      const amp = (x) => { const y = x - 2 * k * t; return Math.pow(den, -0.25) * Math.exp(-y * y / (2 * den)); };
+      const re = (x) => {
+        const y = x - 2 * k * t;
+        // 位相：kx − k²t − (1/2)arg(1+2it) + y²·t/den（1/(1+2it) の虚部から）
+        const ph = k * x - k * k * t - 0.5 * Math.atan2(2 * t, 1) + y * y * t / den;
+        return amp(x) * Math.cos(ph);
+      };
+      const F = frame({ W: sz.W, H: sz.H, xmin: a, xmax: b, ymin: -1.1, ymax: 1.15 });
+      let s = curve(F, re, a, b, 'curve alt', 1600) + curve(F, amp, a, b, 'curve alt2') + curve(F, (x) => -amp(x), a, b, 'curve faint');
+      s += `<line class="curve alt2" x1="${F.L + 10}" x2="${F.L + 34}" y1="${F.T + 10}" y2="${F.T + 10}"/><text class="lab sm" x="${F.L + 40}" y="${F.T + 14}">|u(t, x)|</text>`;
+      s += `<line class="curve alt" x1="${F.L + 120}" x2="${F.L + 144}" y1="${F.T + 10}" y2="${F.T + 10}"/><text class="lab sm" x="${F.L + 150}" y="${F.T + 14}">Re u(t, x)</text>`;
+      return {
+        svg: svgWrap(F, s),
+        out: `sup|u(t)| = (1 + 4t²)^(−1/4) = ${fmt(Math.pow(den, -0.25))}　‖u(t)‖₂² = √π（一定）`,
+        msg: '',
+        cap: `t = ${fmt(t)}　sup|u| = ${fmt(Math.pow(den, -0.25))}`,
       };
     },
   };

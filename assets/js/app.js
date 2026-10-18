@@ -649,9 +649,9 @@
   function roadmapPage() {
     const app = document.getElementById('app');
     document.title = 'ロードマップ — ' + SITE.jp;
-    const later = [['3年', ['位相空間', 'ルベーグ積分', '複素解析', '常微分方程式']], ['4年', ['ノルム空間・バナッハ空間', 'ヒルベルト空間', 'フーリエ解析', '関数解析']]];
+    const later = [['今後の予定', ['偏微分・全微分（第 8 章）', '重積分（第 9 章）', '位相空間', '複素解析', 'スペクトル理論']]];
     const grades = [...new Set(BOOK.map((c) => c.grade))];
-    const main = `<div class="page-wrap"><h1 class="title">ロードマップ</h1><p class="lead ui">1 年から 4 年まで、学ぶ順番の地図です。色の付いた章は読めます。</p>
+    const main = `<div class="page-wrap"><h1 class="title">ロードマップ</h1><p class="lead ui">学部 1 年から研究の入口まで、学ぶ順番の地図です。色の付いた章は読めます。</p>
       <div class="road">${grades.map((g) => `<div class="road-row"><div class="road-g ui">${esc(g)}</div><div class="road-nodes">${BOOK.filter((c) => c.grade === g).map((c) => `<a class="node${c.sections.length ? '' : ' off'}" href="${c.sections.length ? 'book.html?ch=' + c.no : '#'}"><span class="gl">${esc(c.glyph)}</span><span class="nt">第 ${c.no} 章<br><b>${esc(c.title)}</b></span></a>`).join('<span class="arr">→</span>')}</div></div>`).join('')}
       ${later.map(([g, ts]) => `<div class="road-row"><div class="road-g ui">${g}</div><div class="road-nodes">${ts.map((t) => `<span class="node off"><span class="nt"><b>${t}</b><br>準備中</span></span>`).join('<span class="arr">→</span>')}</div></div>`).join('')}</div></div>`;
     app.innerHTML = shell('roadmap', 'roadmap.html', main);
