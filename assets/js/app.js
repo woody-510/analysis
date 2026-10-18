@@ -44,25 +44,38 @@
     if (PAGE.mode === 'dict' && PAGE.cur === id && anc) return '#' + anc;
     return 'article.html?id=' + id + (EMBED ? '&embed=1' : '') + (anc ? '#' + anc : '');
   }
-  function links(s) {
-    return s.replace(/\[\[([^\]|#]+)(?:#([^\]|]+))?(?:\|([^\]]+))?\]\]/g, (m, id, anc, label) => {
-      const a = byId[id];
-      if (!a) return `<a class="wl missing" title="まだ作成していないページ">${label || esc(id)}</a>`;
-      let text = label;
-      if (!text) text = anc && ANCH[id + '#' + anc] ? ANCH[id + '#' + anc].block.title : a.title;
-      return `<a class="wl" href="${href(id, anc)}" data-peek="${id}${anc ? '#' + anc : ''}">${text}</a>`;
-    });
+  /* [[id]]・[[id#anchor]]・[[id#anchor|表示名]]。表示名には数式 $…$ や単独の ] を含めてよい。 */
+  const LINK_RE = /\[\[([^\]|#]+)(?:#([^\]|]+))?(?:\|((?:[^\]]|\](?!\]))+))?\]\]/g;
+  function linkHTML(id, anc, labelHTML) {
+    const a = byId[id];
+    if (!a) return `<a class="wl missing" title="まだ作成していないページ">${labelHTML || esc(id)}</a>`;
+    let text = labelHTML;
+    if (!text) text = anc && ANCH[id + '#' + anc] ? ANCH[id + '#' + anc].block.title : a.title;
+    return `<a class="wl" href="${href(id, anc)}" data-peek="${id}${anc ? '#' + anc : ''}">${text}</a>`;
   }
-  function rich(s, ctx) {
-    if (!s) return '';
+  function links(s) {
+    return s.replace(LINK_RE, (m, id, anc, label) => linkHTML(id, anc, label));
+  }
+  /* 数式だけを描画する（リンクは扱わない） */
+  function mathOnly(s, ctx) {
     const re = /\$\$([\s\S]+?)\$\$|\$([^$]+?)\$/g;
     let out = '', last = 0, m;
     while ((m = re.exec(s))) {
-      out += links(s.slice(last, m.index));
+      out += s.slice(last, m.index);
       out += m[1] != null ? tex(m[1], true, ctx) : tex(m[2], false, ctx);
       last = re.lastIndex;
     }
-    return out + links(s.slice(last));
+    return out + s.slice(last);
+  }
+  /* 本文の描画：先にリンクを取り出し（表示名の数式も描画して）、残りの数式を描画してから戻す */
+  function rich(s, ctx) {
+    if (!s) return '';
+    const store = [];
+    const body = String(s).replace(LINK_RE, (m, id, anc, label) => {
+      store.push(linkHTML(id, anc, label ? mathOnly(label, ctx) : null));
+      return '\u0000' + (store.length - 1) + '\u0000';
+    });
+    return mathOnly(body, ctx).replace(/\u0000(\d+)\u0000/g, (m, i) => store[+i]);
   }
   /* 記事冒頭の「このページで使う記号」メモ（開閉式） */
   function symNote(art) {

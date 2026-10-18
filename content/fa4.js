@@ -277,4 +277,62 @@ $$(I-T_A)^{-1}=\sum_{k=0}^\infty T_A^k=\begin{pmatrix}\sum(1/2)^k&0\\0&\sum(1/2)
       { t: 'problem', id: 'prob-2', level: 2, title: '標準', text: R`$X$ をバナッハ空間、$T\in L(X)$、$\|T\|<1$ とする。$g\in X$ に対する方程式 $u-Tu=g$ の解 $u$ と、部分和 $u_n:=\sum_{k=0}^nT^kg$ について $\|u-u_n\|\le\dfrac{\|T\|^{n+1}}{1-\|T\|}\|g\|$ を示せ。`, hint: R`$u-u_n=\sum_{k>n}T^kg$。`, answer: R`$u-u_n=\sum_{k=n+1}^\infty T^kg$ なので、三角不等式（極限で）より $\|u-u_n\|\le\sum_{k=n+1}^\infty\|T\|^k\|g\|=\frac{\|T\|^{n+1}}{1-\|T\|}\|g\|$。`, space: 5 },
     ],
   });
+  /* ------------------------------------------------------------ */
+  A.push({
+    id: 'fa-summary',
+    title: '関数解析のまとめ',
+    sub: '重要度・覚えること・証明の型・よくある間違い（資料 第 1〜17 章）',
+    yomi: 'かんすうかいせきのまとめ',
+    aliases: ['まとめ', '重要度ランキング', 'じゅうようど', '覚えることリスト', 'おぼえること', 'テスト対策', 'てすとたいさく', '証明の型', 'よくある間違い', '誤植一覧', 'ごしょく'],
+    kind: 'まとめ',
+    field: '関数解析',
+    grade: '2年後期',
+    importance: 3,
+    prereq: ['vector-space', 'normed-space', 'banach-space', 'hilbert-space', 'linear-operator'],
+    related: ['banach-fixed-point', 'projection-theorem', 'neumann-series', 'metric-space'],
+    notation: [R`★★★：定義をそのまま書け、証明を再現できるようにしておきたいもの。★★：意味を説明でき、簡単な確認ができればよいもの。★：流れを理解するために読んでおけばよいもの。（重要度は、参考資料の書き方と一般的な出題傾向からの目安である。実際の出題範囲は授業の指示を優先すること。）`],
+    synopsis: R`参考資料（解析学 IV）第 1〜17 章の内容を、重要度ごとに並べ、覚えるべき定義、繰り返し使う証明の型、間違えやすい点と資料の誤植をまとめた。各項目から本文の記事に飛べる。`,
+    body: [
+      { t: 'h2', id: 'rank', text: '重要度ランキング' },
+      { t: 'table', html: R`<table class="tbl"><tr><th>重要度</th><th>項目</th><th>できるようにしておくこと</th></tr>
+<tr><td>★★★</td><td>[[normed-space#def-norm|ノルムの定義]]・[[normed-space#ex-norm-c|C(I) の最大値ノルム]]</td><td>3 条件を書く。最大値ノルムが三角不等式をみたすことを示す</td></tr>
+<tr><td>★★★</td><td>[[banach-space#def-banach|コーシー列・完備・バナッハ空間]]</td><td>定義を書く。収束列との違いを説明する</td></tr>
+<tr><td>★★★</td><td>[[banach-space#thm-c-complete|C([a,b]) の完備性]]</td><td>4 ステップの証明を再現する</td></tr>
+<tr><td>★★★</td><td>[[banach-space#ex-c-l1|積分ノルムでは完備でない]]</td><td>坂の関数列がコーシー列で、極限が連続でないことを示す</td></tr>
+<tr><td>★★★</td><td>[[banach-fixed-point#thm-banach-fp|バナッハの不動点定理]]</td><td>主張と証明（等比数列の評価・極限・一意性）。$x=\cos x$ の例</td></tr>
+<tr><td>★★★</td><td>[[ode-application#thm-duhamel|積分方程式への書きかえ]]・[[ode-application#thm-global|時間大域解]]</td><td>同値性の証明。重み付きノルムで縮小定数 $\frac Lk$ を出す計算</td></tr>
+<tr><td>★★★</td><td>[[sequence-spaces#thm-holder|ヘルダー]]・[[sequence-spaces#thm-minkowski|ミンコフスキー]]</td><td>正規化してヤングを使う証明。指数の関係 $(p-1)q=p$</td></tr>
+<tr><td>★★★</td><td>[[hilbert-space#thm-cs|コーシー＝シュワルツ]]・[[hilbert-space#thm-inner-norm|内積からノルム]]</td><td>$\alpha=-\frac{(f,g)}{\|g\|^2}$ を使う証明。複素共役の扱い</td></tr>
+<tr><td>★★★</td><td>[[projection-theorem#thm-projection|射影定理]]</td><td>一意性の証明。存在の 3 段階（最小化列・中線定理・直交性）の流れ</td></tr>
+<tr><td>★★★</td><td>[[orthonormal-system#thm-bessel|ベッセルの不等式]]・[[orthonormal-system#thm-cons|完全正規直交系の特徴づけ]]</td><td>ベッセルの計算。(i)〜(v) の同値性の証明の順番</td></tr>
+<tr><td>★★★</td><td>[[linear-operator#thm-cont-bdd|連続 ⇔ 有界]]</td><td>両方向の証明（$g_k=\frac{f_k}{\sqrt k\|f_k\|}$ の作り方）</td></tr>
+<tr><td>★★★</td><td>[[operator-norm#def-opnorm|作用素ノルム]]・[[operator-norm#thm-lxy-complete|L(X,Y) の完備性]]</td><td>定義と基本性質。具体例のノルムを計算する</td></tr>
+<tr><td>★★★</td><td>[[neumann-series#thm-neumann|ノイマン級数]]</td><td>主張と証明（絶対収束・望遠鏡和・極限）</td></tr>
+<tr><td>★★</td><td>[[vector-space#def-vs|線形空間]]・[[vector-space#def-indep|線形独立と次元]]</td><td>$C(I)$、$\ell^1$ が無限次元であることを示す</td></tr>
+<tr><td>★★</td><td>[[normed-space#thm-closure-sub|部分空間の閉包は閉部分空間]]</td><td>点列による証明</td></tr>
+<tr><td>★★</td><td>[[normed-space#thm-equiv-fin|有限次元のノルムの同値性]]</td><td>証明の流れ（コンパクト性を使う場所）</td></tr>
+<tr><td>★★</td><td>[[ode-application#thm-gronwall|グロンウォールの不等式]]</td><td>$H e^{-G}$ の微分の計算</td></tr>
+<tr><td>★★</td><td>[[sequence-spaces#lem-young|ヤング]]・[[sequence-spaces#thm-lp-complete|ℓᵖ の完備性]]</td><td>有限和で極限をとる手順</td></tr>
+<tr><td>★★</td><td>[[hilbert-space#thm-parallelogram|中線定理]]・[[projection-theorem#thm-perp-closed|直交補空間は閉]]</td><td>内積の展開。内積の連続性</td></tr>
+<tr><td>★★</td><td>[[extension-theorem#thm-extension|拡張定理]]</td><td>well-defined であることの証明</td></tr>
+<tr><td>★★</td><td>[[metric-space#def-metric|距離の公理]]・[[open-closed#thm-open-axioms|開集合の性質]]・[[closure#thm-closure-seq|閉包の点列による特徴づけ]]</td><td>定義と、ε 近傍を使う証明</td></tr>
+<tr><td>★</td><td>[[metric-continuity#thm-cont-open|連続写像の開集合による特徴づけ]]・[[interior-boundary#thm-int-open|内部は開集合]]</td><td>流れを理解する</td></tr></table>`, caption: R`重要度ランキング（目安）。項目名から本文に飛べる。` },
+
+      { t: 'h2', id: 'defs', text: '覚えることリスト（定義）' },
+      { t: 'note', title: '一字一句書けるようにしておく定義', text: R`<ol><li><b>ノルム</b>：(i) $\|f\|\ge0$、$\|f\|=0\iff f=0$、(ii) $\|\alpha f\|=|\alpha|\|f\|$、(iii) $\|f+g\|\le\|f\|+\|g\|$。</li><li><b>収束</b>：$\forall\varepsilon>0\ \exists N=N(\varepsilon)\ \forall k\ge N,\ \|f_k-f\|<\varepsilon$。<b>コーシー列</b>：$\forall\varepsilon>0\ \exists N\ \forall k,l\ge N,\ \|f_k-f_l\|<\varepsilon$。</li><li><b>完備</b>：任意のコーシー列が $X$ の中に極限をもつ。<b>バナッハ空間</b>：完備なノルム空間。</li><li><b>縮小写像</b>：$\exists r\in(0,1)$, $d(\Phi f,\Phi g)\le r\,d(f,g)$（$\Phi:X\to X$）。</li><li><b>内積</b>：(i) $(f,f)\ge0$、$=0\iff f=0$、(ii) $(f,g)=\overline{(g,f)}$、(iii) $(f_1+f_2,g)=(f_1,g)+(f_2,g)$、(iv) $(\alpha f,g)=\alpha(f,g)$。<b>ヒルベルト空間</b>：内積から来るノルムで完備な内積空間。</li><li><b>直交補空間</b>：$L^\perp=\{f\mid(f,g)=0\ \forall g\in L\}$。<b>正規直交系</b>：$(f_j,f_m)=\delta_{jm}$。<b>完全</b>：$f=\sum(f,f_k)f_k$（すべての $f$）。</li><li><b>有界線形作用素</b>：$\exists M>0$, $\|Tf\|\le M\|f\|$。<b>作用素ノルム</b>：$\|T\|=\sup_{f\ne0}\frac{\|Tf\|}{\|f\|}$。</li><li><b>$\ell^p$</b>：$\sum|a_k|^p<\infty$、$\|a\|_{\ell^p}=(\sum|a_k|^p)^{1/p}$。<b>共役指数</b>：$\frac1p+\frac1q=1$。</li></ol>` },
+
+      { t: 'h2', id: 'patterns', text: '証明の型' },
+      { t: 'table', html: R`<table class="tbl"><tr><th>型</th><th>手順</th><th>使う場所</th></tr>
+<tr><td>完備性の 4 ステップ</td><td>① コーシー列をとる ② 各点・各成分で数のコーシー列 → 極限の候補 ③ 不等式 $<\frac\varepsilon2$ で $l\to\infty$ として $\le\frac\varepsilon2$ ④ 候補が空間に属し、ノルムで収束</td><td>[[banach-space#thm-c-complete|C(I)]]、[[sequence-spaces#thm-lp-complete|ℓᵖ]]、[[operator-norm#thm-lxy-complete|L(X,Y)]]、[[banach-space#ex-c1-banach|C¹(I)]]、[[ode-application#prop-xk-banach|重み付き空間]]</td></tr>
+<tr><td>縮小写像の使い方</td><td>方程式を $u=\Phi(u)$ に書く → 完備な空間（またはその閉集合）を選ぶ → $\Phi(X)\subset X$ → $\|\Phi u-\Phi v\|\le r\|u-v\|$</td><td>[[banach-fixed-point#ex-cosx|x = cos x]]、[[ode-application#thm-global|常微分方程式]]、[[local-wellposedness#thm-abstract-lwp|NLS の局所解]]</td></tr>
+<tr><td>正規化</td><td>$\|f\|=1$ の場合に示せば、斉次性で一般の場合に戻せる</td><td>[[sequence-spaces#thm-holder|ヘルダー]]、[[normed-space#thm-equiv-fin|ノルムの同値]]、[[operator-norm#thm-opnorm-sphere|作用素ノルム]]</td></tr>
+<tr><td>作用素ノルムの計算</td><td>上から：$\|Tf\|\le M\|f\|$ を示して $\|T\|\le M$。下から：等号に近い $f$ を一つ見つけて $\|T\|\ge M$</td><td>[[operator-norm#ex-opnorm-int|積分汎関数]]、[[operator-norm#prob-2|点での値]]</td></tr>
+<tr><td>稠密性と極限</td><td>扱いやすい元で示す → 点列で近似 → 連続性（有界性）で極限に移す</td><td>[[extension-theorem#thm-extension|拡張定理]]、[[orthonormal-system#thm-proj-expansion|正射影の展開]]、[[fourier-transform#thm-plancherel|プランシュレル]]</td></tr>
+<tr><td>ε/3 論法</td><td>$|f(x)-f(a)|\le|f-f_N|+|f_N(x)-f_N(a)|+|f_N-f|$</td><td>[[uniform-convergence#thm-unif-cont|一様収束の極限は連続]]</td></tr></table>`, caption: R`繰り返し出てくる証明の型。` },
+
+      { t: 'h2', id: 'mistakes', text: 'よくある間違い' },
+      { t: 'note', title: '間違えやすいところ', text: R`<ul><li><b>「有界な作用素」は「値が有界」ではない</b>：$\|Tf\|\le M\|f\|$ の意味（[[linear-operator#def-bdd-op|注意]]）。</li><li><b>線形結合はつねに有限和</b>：無限和はノルムがあって初めて意味をもつ（[[vector-space#def-span|生成]]）。</li><li><b>部分空間は空でない</b>：$0$ を含むかどうかで部分空間でないことを示せる。</li><li><b>完備性はノルムによる</b>：同じ $C([0,1])$ でも最大値ノルムでは完備、積分ノルムでは完備でない。</li><li><b>有限次元の結果を無限次元に使わない</b>：ボルツァーノ＝ワイエルシュトラス、ノルムの同値、「単射 ⇔ 全射」は無限次元では成り立たない（[[linear-operator#ex-linop|シフト作用素]]）。</li><li><b>不動点定理では $\Phi(X)\subset X$ を確かめる</b>（[[banach-fixed-point#thm|反例]]）。</li><li><b>極限をとると $<$ は $\le$ になる</b>：だから最初に $\frac\varepsilon2$ を使う。</li><li><b>横線の意味</b>：数の上なら複素共役、集合の上なら閉包。</li><li><b>$f'$ の意味</b>：不動点定理の証明の $f'$ は「別の元」で、微分ではない。</li></ul>` },
+      { t: 'rem', title: '資料の誤植・表示の乱れ（このサイトで補ったもの）', text: R`<ul><li>第 1 章：$\ell^1$ は「収束する数列全体」ではなく「絶対値の和が収束する数列全体」（[[vector-space|線形空間]]）。</li><li>第 1 章：部分空間の定義に「空でない」が必要（[[vector-space#def-subspace|部分空間]]）。</li><li>第 2 章：有限次元のノルムの同値性の証明で「$\mathbb{K}^n$」は「$\mathbb{K}^d$」（[[normed-space#thm-equiv-fin|定理]]）。</li><li>第 7 章：内積の公理 (ii) の右辺には複素共役が付く（[[hilbert-space#def-inner|内積]]）。第 9 章の内積の計算でも共役の横線が必要。</li><li>第 13 章：PDF の文字化けで $\ge$ が $\le$ と表示される箇所がある（$d(x,y)\ge0$、$N\ge1$、$k\ge N$）。</li><li>第 14 章：一点集合 $\{a\}$ が開集合でないのは $\mathbb{R}$ などの場合で、離散距離空間では開集合になる（[[open-closed#closed|注意]]）。</li><li>第 12 章：拡張定理で完備性が必要なのは値域 $Y$ だけ（[[extension-theorem#thm-extension|定理]]）。</li></ul>` },
+    ],
+  });
 })();

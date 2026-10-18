@@ -157,7 +157,7 @@ $$c_k=\frac1{2\pi}\int_{-\pi}^\pi x(\cos kx-i\sin kx)\,dx=\frac{-i}{2\pi}\cdot\f
         t: 'proof',
         sketch: R`$n=1$ で示せば、$e^{-|x|^2/2}=\prod_je^{-x_j^2/2}$ と $e^{-ix\cdot\xi}=\prod_je^{-ix_j\xi_j}$ により各変数の積になる（フビニの定理）。$n=1$ では、変換 $g(\xi)$ が常微分方程式 $g'=-\xi g$ をみたすことを示す。`,
         steps: [
-          { text: R`$n=1$、$g(\xi):=\int_{\mathbb{R}}e^{-ix\xi}e^{-x^2/2}dx$ とおく。$g(0)=\int e^{-x^2/2}dx=\sqrt{2\pi}$（[[improper-integral#ex-gauss|ガウス積分]] $\int e^{-y^2}dy=\sqrt\pi$ で $x=\sqrt2y$ と置換）。` },
+          { text: R`$n=1$、$g(\xi):=\int_{\mathbb{R}}e^{-ix\xi}e^{-x^2/2}dx$ とおく。$g(0)=\int e^{-x^2/2}dx=\sqrt{2\pi}$（[[change-of-variables#thm-gauss-integral|ガウス積分]] $\int e^{-y^2}dy=\sqrt\pi$ で $x=\sqrt2y$ と置換）。` },
           { text: R`$\xi$ について積分記号下で微分すると（被積分関数の $\xi$ 微分 $-ixe^{-ix\xi}e^{-x^2/2}$ は可積分関数 $|x|e^{-x^2/2}$ で抑えられるので、[[lebesgue-lp#thm-dct|優収束定理]]により正当化される）、$g'(\xi)=\int(-ix)e^{-ix\xi}e^{-x^2/2}dx$。` },
           { text: R`$(-x)e^{-x^2/2}=\frac d{dx}e^{-x^2/2}$ なので部分積分（境界項は $0$）すると $g'(\xi)=i\int e^{-ix\xi}\frac d{dx}e^{-x^2/2}dx=-i\int\Bigl(\frac d{dx}e^{-ix\xi}\Bigr)e^{-x^2/2}dx=-i\cdot(-i\xi)g(\xi)=-\xi g(\xi)$。` },
           { text: R`$h(\xi):=g(\xi)e^{\xi^2/2}$ とおくと $h'=(g'+\xi g)e^{\xi^2/2}=0$ なので $h$ は定数（[[mean-value#cor-const|平均値の定理の系]]）で $h=h(0)=\sqrt{2\pi}$。よって $g(\xi)=\sqrt{2\pi}e^{-\xi^2/2}$。一般の $a$ は[[fourier-transform#prop-ft-basic|スケール]]で $e^{-a|x|^2}=e^{-|\sqrt{2a}x|^2/2}$ と見ればよい。` },
@@ -278,7 +278,7 @@ $$\|f\|_{L^\infty}\le C_{n,s}\|f\|_{H^s},\qquad C_{n,s}:=(2\pi)^{-n/2}\Bigl(\int
       {
         t: 'proof',
         steps: [
-          { text: R`(1)(3) は指数関数の性質（$e^{-|x|^2/(4t)}\le1$、等号は $x=0$）。(2) 各変数の積に分かれ、$\int_{\mathbb{R}}e^{-y^2/(4t)}dy=\sqrt{4t}\int e^{-z^2}dz=\sqrt{4\pi t}$（$y=\sqrt{4t}z$ と置換、[[improper-integral#ex-gauss|ガウス積分]]）。` },
+          { text: R`(1)(3) は指数関数の性質（$e^{-|x|^2/(4t)}\le1$、等号は $x=0$）。(2) 各変数の積に分かれ、$\int_{\mathbb{R}}e^{-y^2/(4t)}dy=\sqrt{4t}\int e^{-z^2}dz=\sqrt{4\pi t}$（$y=\sqrt{4t}z$ と置換、[[change-of-variables#thm-gauss-integral|ガウス積分]]）。` },
           {
             text: R`(4) $n=1$ で計算する（一般の $n$ も同様に各変数ごと）。$G=(4\pi t)^{-1/2}e^{-x^2/(4t)}$ について`,
             eqs: [

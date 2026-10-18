@@ -272,6 +272,7 @@ svg .rup{fill:rgba(168,38,27,.10);stroke:var(--accent);stroke-width:1}
 svg .rlow{fill:rgba(35,61,107,.16);stroke:#233d6b;stroke-width:1;stroke-dasharray:3 2}
 svg .ballfill{fill:rgba(242,194,48,.22);stroke:none}
 .fig.plain svg{width:100%;height:auto;display:block;max-height:300px}
+.fig.plain .katex svg{height:inherit;max-height:none}
 .fig.plain svg text{font:12px var(--f-mono);fill:var(--ink)}
 .doc table.tbl{border-collapse:collapse;margin:10px 0;font-size:14px;min-width:60%}
 .doc table.tbl th,.doc table.tbl td{border:1px solid var(--rule);padding:4px 10px;text-align:left;vertical-align:top}
