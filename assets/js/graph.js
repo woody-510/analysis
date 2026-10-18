@@ -1013,8 +1013,9 @@
       }
       return true;
     }
+    const needFn = T.fields.some((fd) => fd.kind === 'text');
     function draw() {
-      if (!st.fn) return;
+      if (!st.fn && needFn) return;
       fields.forEach((fd) => { if (fd.kind === 'range') { const v = el.querySelector(`[data-v="${fd.k}"]`); try { v.textContent = fd.show ? fd.show(st) : fmt(st[fd.k]); } catch (e) { v.textContent = ''; } } });
       let r;
       try { r = T.draw(st, {}); } catch (e) { r = { msg: '描画できません：' + e.message }; }
@@ -1023,7 +1024,7 @@
       if (r.svg) $('.g-svg').innerHTML = r.svg;
     }
     function frames() {
-      if (!T.frames || !st.fn) return;
+      if (!T.frames || (!st.fn && needFn)) return;
       $('.g-frames').innerHTML = T.frames(st).map((o) => {
         const s2 = Object.assign({}, st, o);
         let r; try { r = T.draw(s2, { W: 360, H: 210 }); } catch (e) { r = {}; }
