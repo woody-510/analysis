@@ -307,8 +307,9 @@ $$\frac{f(b)-f(a)}{b-a}=f'(c) \tag{#}$$
       { t: 'h2', id: 'cor', text: '系：導関数から関数の形を読む' },
       { t: 'cor', id: 'cor-const', title: '導関数が 0 なら定数', yomi: 'どうかんすうが0ならていすう', imp: 2, text: R`$a,b\in\mathbb{R}$, $a<b$ とし、$f\in C([a,b])$ が $(a,b)$ で微分可能で、すべての $x\in(a,b)$ で $f'(x)=0$ ならば、$f$ は $[a,b]$ 上で定数である。` },
       { t: 'proof', steps: [{ text: R`$x\in(a,b]$ を任意にとる。$[a,x]$ で平均値の定理を使うと、$f(x)-f(a)=f'(c)(x-a)$ となる $c\in(a,x)$ がある。$f'(c)=0$ なので $f(x)=f(a)$。` }] },
-      { t: 'cor', id: 'cor-incr', title: '導関数の符号と増減', yomi: 'どうかんすうのふごうとぞうげん', imp: 2, text: R`$I\subset\mathbb{R}$ を開区間、$f:I\to\mathbb{R}$ が $I$ 上で微分可能で、すべての $x\in I$ で $f'(x)>0$ ならば、$f$ は $I$ で狭義単調増加である。$f'(x)<0$ ならば狭義単調減少である。` },
-      { t: 'proof', steps: [{ text: R`$x<y$ を $I$ から任意にとる。$[x,y]$ で平均値の定理を使うと、$f(y)-f(x)=f'(c)(y-x)$ となる $c\in(x,y)$ がある。$f'(c)>0$、$y-x>0$ なので $f(y)>f(x)$。` }] },
+      { t: 'cor', id: 'cor-incr', title: '導関数の符号と増減', yomi: 'どうかんすうのふごうとぞうげん', imp: 2, text: R`$I\subset\mathbb{R}$ を区間（開・閉・半開のどれでもよい）、$f\in C(I)$ が $I$ の内部（端点を除いた部分）で微分可能とする。
+<ol><li>内部のすべての $x$ で $f'(x)>0$ ならば、$f$ は $I$ で狭義単調増加である。$f'(x)<0$ ならば狭義単調減少である。</li><li>内部のすべての $x$ で $f'(x)\ge0$ ならば、$f$ は $I$ で単調増加（$x<y\Rightarrow f(x)\le f(y)$）である。$f'(x)\le0$ ならば単調減少である。</li></ol>` },
+      { t: 'proof', steps: [{ text: R`$x<y$ を $I$ から任意にとる。$[x,y]\subset I$ で $f$ は連続、$(x,y)$（$I$ の内部に含まれる）で微分可能なので、平均値の定理より $f(y)-f(x)=f'(c)(y-x)$ となる $c\in(x,y)$ がある。(1) $f'(c)>0$、$y-x>0$ なので $f(y)>f(x)$。(2) $f'(c)\ge0$ なので $f(y)\ge f(x)$。減少の場合も符号を逆にして同じ。` }] },
       { t: 'rem', title: '「区間で」が大事', text: R`$f(x)=\dfrac1x$ は $x\ne0$ で $f'(x)=-\dfrac1{x^2}<0$ だが、$f(-1)=-1<1=f(1)$ なので $\mathbb{R}\setminus\{0\}$ 全体では減少関数でない。定義域が区間でない（$0$ で切れている）ため、平均値の定理を $[-1,1]$ に使えないのである。` },
       { t: 'fig', type: 'mvt', preset: 'abs', caption: R`$|x|$ on $[-1,2]$。弦の傾きは $\frac13$ だが、$f'$ は $-1$ か $1$ しかとらない。$x=0$（×印）で微分可能でないので、平均値の定理の仮定をみたさない。` },
 
@@ -381,6 +382,60 @@ $$\frac{f'(c)}{g'(c)}=\frac{f(b)-f(a)}{g(b)-g(a)} \tag{#}$$
 
       { t: 'h2', id: 'problems', text: '問題' },
       { t: 'problem', id: 'prob-cmvt-1', level: 1, title: '基本', text: R`$f(x)=x^2$、$g(x)=x^3$、区間 $[1,2]$ について、コーシーの平均値の定理の $c$ を求めよ。`, answer: R`$\frac{f(2)-f(1)}{g(2)-g(1)}=\frac37$、$\frac{f'(c)}{g'(c)}=\frac{2c}{3c^2}=\frac2{3c}$。$\frac2{3c}=\frac37$ より $c=\frac{14}9\in(1,2)$。`, space: 4 },
+    ],
+  });
+  /* ------------------------------------------------------------ */
+  A.push({
+    id: 'taylor',
+    title: 'テイラーの定理',
+    sub: 'ラグランジュの剰余・ランダウの記号・極値の判定',
+    yomi: 'ていらーのていり',
+    aliases: ['テイラーの定理', 'ていらーのていり', 'テイラー展開', 'ていらーてんかい', 'マクローリン展開', 'まくろーりん', '剰余項', 'じょうよこう', 'ラグランジュの剰余', 'ランダウの記号', 'スモールオー', 'o記号', '極値判定', 'きょくちはんてい'],
+    kind: '定理',
+    field: '微分',
+    grade: '1年前期',
+    importance: 3,
+    prereq: ['rolle', 'mean-value', 'derivative-rules'],
+    related: ['power-series', 'total-derivative', 'cauchy-mean-value'],
+    notation: [
+      R`$I\subset\mathbb{R}$：開区間。$n\in\mathbb{N}\cup\{0\}$。$f^{(k)}$：$k$ 次導関数（$f^{(0)}=f$）。`,
+      R`$f$ が $I$ で <b>$n+1$ 回微分可能</b>：$f,f',\dots,f^{(n)}$ が $I$ で微分可能。$C^n(I)$：$n$ 回微分可能で $f^{(n)}$ が連続な関数全体。`,
+      R`$T_n(x):=\sum_{k=0}^n\frac{f^{(k)}(a)}{k!}(x-a)^k$：$a$ を中心とする $n$ 次のテイラー多項式。`,
+      R`「$c$ は $a$ と $x$ の間」：$x>a$ なら $a<c<x$、$x<a$ なら $x<c<a$。`,
+      R`ランダウの記号 $g(x)=o(h(x))\ (x\to a)$ $:\Longleftrightarrow$ $\displaystyle\lim_{x\to a}\frac{g(x)}{h(x)}=0$（$h(x)\ne0$、$x\ne a$）。「$h$ より速く $0$ に近づく」。`,
+    ],
+    synopsis: R`なめらかな関数は、一点の近くで多項式 $T_n(x)=\sum\frac{f^{(k)}(a)}{k!}(x-a)^k$ で近似でき、その誤差は $\frac{f^{(n+1)}(c)}{(n+1)!}(x-a)^{n+1}$ と書ける（ラグランジュの剰余）。平均値の定理は $n=0$ の場合である。誤差の評価から、極限の計算、極値の判定、関数のべき級数展開が得られる。`,
+    body: [
+      { t: 'h2', id: 'stmt', text: '主張' },
+      { t: 'thm', id: 'thm-taylor', title: 'テイラーの定理（ラグランジュの剰余）', yomi: 'ていらーのていり', imp: 3, text: R`$I$ を開区間、$f:I\to\mathbb{R}$ を $I$ で $n+1$ 回微分可能、$a,x\in I$ とする。このとき $a$ と $x$ の間のある $c$（$x=a$ なら $c=a$）が存在して
+$$f(x)=\sum_{k=0}^n\frac{f^{(k)}(a)}{k!}(x-a)^k+\frac{f^{(n+1)}(c)}{(n+1)!}(x-a)^{n+1}.$$` },
+      { t: 'strategy', text: R`$x$ を固定し、誤差を $K(x-a)^{n+1}$ と書いて $K$ を定める。「$t$ から見たテイラー多項式」との差 $g(t)$ を作ると $g(a)=g(x)=0$ となり、[[rolle#thm-rolle|ロルの定理]]で $g'(c)=0$。$g'$ は望遠鏡和で一項だけになり、そこから $K$ が読める。` },
+      {
+        t: 'proof',
+        steps: [
+          { text: R`$x=a$ なら両辺とも $f(a)$。以下 $x\ne a$ とし、$K\in\mathbb{R}$ を $f(x)=T_n(x)+K(x-a)^{n+1}$ となるように定める（$(x-a)^{n+1}\ne0$ なので一つに決まる）。` },
+          { text: R`$a$ と $x$ を端点とする閉区間 $J$ 上で $g(t):=f(x)-\sum_{k=0}^n\frac{f^{(k)}(t)}{k!}(x-t)^k-K(x-t)^{n+1}$ とおく。$f^{(k)}$（$k\le n$）は微分可能なので連続で、$g$ は $J$ 上連続・内部で微分可能。$g(x)=f(x)-f(x)=0$（$k\ge1$ の項は $(x-x)^k=0$）、$g(a)=f(x)-T_n(x)-K(x-a)^{n+1}=0$。` },
+          {
+            text: R`$g'$ を計算する。$k\ge1$ について積の微分より $\frac d{dt}\Bigl[\frac{f^{(k)}(t)}{k!}(x-t)^k\Bigr]=\frac{f^{(k+1)}(t)}{k!}(x-t)^k-\frac{f^{(k)}(t)}{(k-1)!}(x-t)^{k-1}$ で、$k=0$ では $f'(t)$。和をとると隣どうしが打ち消し合い（[[sigma-notation#prop-sum-rules|望遠鏡和]]）、`,
+            eqs: [[R`g'(t)=-\frac{f^{(n+1)}(t)}{n!}(x-t)^n+K(n+1)(x-t)^n.`, R`望遠鏡和・$\frac d{dt}(x-t)^{n+1}=-(n+1)(x-t)^n$`]],
+          },
+          { text: R`ロルの定理より、$a$ と $x$ の間の $c$ で $g'(c)=0$。$c\ne x$ なので $(x-c)^n\ne0$ で割って $K(n+1)=\frac{f^{(n+1)}(c)}{n!}$、すなわち $K=\frac{f^{(n+1)}(c)}{(n+1)!}$。` },
+        ],
+      },
+      { t: 'note', title: '言い換え', text: R`$n=0$ のときは $f(x)=f(a)+f'(c)(x-a)$ で、[[mean-value#thm-mvt|平均値の定理]]そのものである。テイラーの定理は「平均値の定理の高次版」で、$f$ を $n$ 次多項式で近似したときの誤差が、$(n+1)$ 次導関数の値一つで書けることを言っている。` },
+      { t: 'cor', id: 'cor-peano', title: 'テイラーの定理（ペアノの剰余）', yomi: 'ぺあののじょうよ', imp: 2, text: R`$I$ を開区間、$a\in I$、$f\in C^n(I)$（$n\ge1$）とすると $f(x)=T_n(x)+o\bigl((x-a)^n\bigr)$（$x\to a$）。` },
+      { t: 'proof', steps: [{ text: R`定理を $n-1$ に使うと $f(x)=T_{n-1}(x)+\frac{f^{(n)}(c_x)}{n!}(x-a)^n$（$c_x$ は $a$ と $x$ の間）。よって $\frac{f(x)-T_n(x)}{(x-a)^n}=\frac{f^{(n)}(c_x)-f^{(n)}(a)}{n!}$。$x\to a$ のとき $|c_x-a|\le|x-a|\to0$ で、$f^{(n)}$ は $a$ で連続なので右辺は $0$ に収束する。` }] },
+
+      { t: 'h2', id: 'ex', text: '例' },
+      { t: 'ex', id: 'ex-taylor-exp', title: 'eˣ のテイラー展開', text: R`$f(x)=e^x$ は何回微分しても $e^x$ なので、$a=0$ で $e^x=\sum_{k=0}^n\frac{x^k}{k!}+\frac{e^c}{(n+1)!}x^{n+1}$。$|x|\le M$ なら剰余は $\le\frac{e^M M^{n+1}}{(n+1)!}\to0$（比判定法で $\sum\frac{M^n}{n!}$ は収束するので項は $0$ に収束）。よって $e^x=\sum_{k=0}^\infty\frac{x^k}{k!}$（すべての $x$）。これは[[power-series#def-exp|べき級数による定義]]と一致する。` },
+      { t: 'ex', id: 'ex-taylor-limit', title: '極限の計算', text: R`$\displaystyle\lim_{x\to0}\frac{\sin x-x}{x^3}$：$\sin$ に $a=0$、$n=3$ のテイラーの定理を使うと $\sin x=x-\frac{x^3}6+\frac{\sin c}{24}x^4$（$\sin^{(4)}=\sin$）。よって $\frac{\sin x-x}{x^3}=-\frac16+\frac{\sin c}{24}x$ で、$|\sin c|\le1$ より右辺の第 2 項は $0$ に収束する。答えは $-\frac16$。` },
+      { t: 'thm', id: 'thm-second-test', title: '2 階導関数による極値の判定', yomi: 'きょくちのはんてい', imp: 2, text: R`$I$ を開区間、$f\in C^2(I)$、$a\in I$ で $f'(a)=0$ とする。$f''(a)>0$ ならば $f$ は $a$ で狭義の極小値をとり（$a$ の近くの $x\ne a$ で $f(x)>f(a)$）、$f''(a)<0$ ならば狭義の極大値をとる。` },
+      { t: 'proof', steps: [{ text: R`$f''$ は $a$ で連続で $f''(a)>0$ なので、[[intermediate-value#lem-sign|符号の保存]]より、ある $\delta>0$ について $|t-a|<\delta$ なら $f''(t)>0$。$0<|x-a|<\delta$ とすると、$n=1$ のテイラーの定理より $f(x)=f(a)+f'(a)(x-a)+\frac{f''(c)}2(x-a)^2=f(a)+\frac{f''(c)}2(x-a)^2$ で、$c$ は $a$ と $x$ の間なので $|c-a|<\delta$、$f''(c)>0$。よって $f(x)>f(a)$。極大も同様。` }] },
+      { t: 'rem', title: 'テイラー級数が元の関数に収束するとは限らない', text: R`$f(x)=e^{-1/x^2}$（$x\ne0$）、$f(0)=0$ は $\mathbb{R}$ 上で何回でも微分可能で、$f^{(k)}(0)=0$（すべての $k$）。テイラー級数はすべての係数が $0$ なので恒等的に $0$ だが、$f(x)>0$（$x\ne0$）。「無限回微分可能」と「べき級数で表せる（実解析的）」は違う。この違いは、偏微分方程式の解の[[dissipative-nls#smoothing|解析的平滑化・ジュブレイ級]]の研究にもつながる。` },
+
+      { t: 'h2', id: 'problems', text: '問題' },
+      { t: 'problem', id: 'prob-taylor-1', level: 1, title: '基本', text: R`$\displaystyle\lim_{x\to0}\frac{e^x-1-x}{x^2}$ を求めよ。`, hint: R`$n=1$ のテイラーの定理で $e^x=1+x+\frac{e^c}2x^2$。`, answer: R`$e^x=1+x+\frac{e^c}2x^2$（$c$ は $0$ と $x$ の間）なので $\frac{e^x-1-x}{x^2}=\frac{e^c}2$。$x\to0$ で $c\to0$ なので、$e^c\to1$（連続性）。答えは $\frac12$。`, space: 4 },
+      { t: 'problem', id: 'prob-taylor-2', level: 2, title: '標準', text: R`$x\ge0$ について $x-\frac{x^2}2\le\log(1+x)\le x$ を示せ。`, hint: R`$\log(1+x)$ に $n=0$ と $n=1$ のテイラーの定理。$(\log(1+x))''=-\frac1{(1+x)^2}<0$。`, answer: R`$f(x)=\log(1+x)$、$f'=\frac1{1+x}$、$f''=-\frac1{(1+x)^2}$。$x>0$ で $n=1$：$f(x)=x+\frac{f''(c)}2x^2\le x$（$f''<0$）。$n=2$：$f'''=\frac2{(1+x)^3}>0$ なので $f(x)=x-\frac{x^2}2+\frac{f'''(c)}6x^3\ge x-\frac{x^2}2$。$x=0$ では等号。`, space: 6 },
     ],
   });
 })();
