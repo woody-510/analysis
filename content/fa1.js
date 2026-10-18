@@ -1,15 +1,15 @@
-/* 第 11 章：線形空間とノルム空間（参考資料 解析学 IV 第 1・2 章） */
+/* 第 11 章：線形空間とノルム空間 */
 (function () {
   const R = String.raw;
   const A = window.ARTICLES;
 
-  const NOTE_K = R`$\mathbb{K}$：$\mathbb{R}$（実数全体）か $\mathbb{C}$（複素数全体）のどちらか。ひと続きの議論の中では、最初にどちらかに決めたら最後まで変えない（資料の約束）。$\mathbb{K}$ の元を<b>スカラー</b>という。`;
+  const NOTE_K = R`$\mathbb{K}$：$\mathbb{R}$（実数全体）か $\mathbb{C}$（複素数全体）のどちらか。ひと続きの議論の中では、最初にどちらかに決めたら最後まで変えない。$\mathbb{K}$ の元を<b>スカラー</b>という。`;
 
   /* ------------------------------------------------------------ */
   A.push({
     id: 'vector-space',
     title: '線形空間',
-    sub: '部分空間・線形独立・次元（資料 第 1 章）',
+    sub: '部分空間・線形独立・次元',
     yomi: 'せんけいくうかん',
     aliases: ['線形空間', 'せんけいくうかん', 'ベクトル空間', 'べくとるくうかん', '部分空間', 'ぶぶんくうかん', '線形独立', 'せんけいどくりつ', '一次独立', '線形従属', '次元', 'じげん', '無限次元', 'むげんじげん', '生成', 'せいせい', '張る', '零元', 'れいげん', '逆元', 'ぎゃくげん'],
     kind: '用語',
@@ -22,7 +22,7 @@
       NOTE_K,
       R`$X$：集合。$f,g,h\in X$ は $X$ の元（ベクトル）。$\alpha,\beta\in\mathbb{K}$ はスカラー。文字の種類で「ベクトル」と「数」を区別している。ベクトルに $f$ を使うのは、後で関数（function）を考えることが多いから。`,
       R`$0$：零元（ゼロの役目をする $X$ の元）。数の $0\in\mathbb{K}$ と同じ記号だが別物で、文脈で区別する。`,
-      R`数列 $a=\{a_k\}_{k=1}^\infty$：各 $k\in\mathbb{N}$ に $a_k\in\mathbb{K}$。$\ell^1:=\bigl\{a\ \bigm|\ \sum_{k=1}^\infty|a_k|<\infty\bigr\}$（[[absolute-convergence|絶対収束]]する数列全体。資料では「収束する数列全体」と書かれているが、正しくは「絶対値の和が収束する数列全体」）。`,
+      R`数列 $a=\{a_k\}_{k=1}^\infty$：各 $k\in\mathbb{N}$ に $a_k\in\mathbb{K}$。$\ell^1:=\bigl\{a\ \bigm|\ \sum_{k=1}^\infty|a_k|<\infty\bigr\}$（[[absolute-convergence|絶対収束]]する数列全体。「収束する数列全体」ではなく「絶対値の和が収束する数列全体」であることに注意）。`,
       R`$I\subset\mathbb{R}$：区間。$C(I):=\{f:I\to\mathbb{K}\mid f\text{ は }I\text{ 上連続}\}$。複素数値 $f=u+iv$（$u,v$ 実数値）が連続とは $u,v$ がともに連続なこと。`,
       R`$\sum_{j=1}^k\alpha_ju_j$：<b>線形結合</b>（有限個のベクトルのスカラー倍の和）。`,
     ],
@@ -50,7 +50,7 @@
           { text: R`$f+(-1)f=1f+(-1)f=(1+(-1))f=0f=0$（(v)(viii) と今示したこと）なので、$(-1)f$ は $f$ の逆元であり、逆元の一意性より $(-1)f=-f$。最後に $\alpha0=\alpha(0f)=(\alpha\cdot0)f=0f=0$（(vi)）。` },
         ],
       },
-      { t: 'rem', title: '公理から出ることと、出ないこと', text: R`「$0f=0$」のような当たり前に見える式も、公理 (i)〜(viii) から導かなければならない。逆に、公理にないこと（たとえばベクトルどうしの掛け算や割り算）は、線形空間では一般には定義されていない。資料の注意にあるとおり、零元・逆元の「存在」を「一意的に存在」と書く文献もあるが、上の命題によりどちらでも同じことである。` },
+      { t: 'rem', title: '公理から出ることと、出ないこと', text: R`「$0f=0$」のような当たり前に見える式も、公理 (i)〜(viii) から導かなければならない。逆に、公理にないこと（たとえばベクトルどうしの掛け算や割り算）は、線形空間では一般には定義されていない。零元・逆元の「存在」を「一意的に存在」と書く文献もあるが、上の命題によりどちらでも同じことである。` },
 
       { t: 'h2', id: 'examples', text: '線形空間の例' },
       { t: 'ex', id: 'ex-kn', title: 'ℝⁿ・ℂⁿ', text: R`$\mathbb{K}^n=\{(x_1,\dots,x_n)\mid x_j\in\mathbb{K}\}$ は、成分ごとの和 $x+y=(x_1+y_1,\dots)$ とスカラー倍 $\alpha x=(\alpha x_1,\dots)$ で線形空間になる。各公理は成分ごとに数の計算規則（交換法則・結合法則・分配法則）を使えば確かめられる。たとえば (vii)：$\alpha(x+y)$ の第 $j$ 成分は $\alpha(x_j+y_j)=\alpha x_j+\alpha y_j$ で、これは $\alpha x+\alpha y$ の第 $j$ 成分。零元は $(0,\dots,0)$、逆元は $(-x_1,\dots,-x_n)$。` },
@@ -87,7 +87,6 @@ $$(f+g)(x):=f(x)+g(x),\qquad(\alpha f)(x):=\alpha f(x)\qquad(x\in I)$$
           { text: R`(iii) 零元は恒等的に $0$ の関数 $0(x):=0$（連続）で、$(f+0)(x)=f(x)+0=f(x)$。(iv) $(-f)(x):=-(f(x))$ は連続で、$(f+(-f))(x)=f(x)-f(x)=0$。$x$ は任意だったので、すべての公理が関数の等式として成り立つ。` },
         ],
       },
-      { t: 'rem', title: '資料の「残りも同様に示せる」', text: R`資料では (vi) まで確かめて「残りも同様」としているが、上のように (vii)(viii) も各点での数の分配法則から出る。どの公理も「各点で値を比べる → 数の計算規則」という同じ型である。` },
 
       { t: 'h2', id: 'dim', text: '線形独立と次元' },
       { t: 'def', id: 'def-indep', title: '線形独立・次元', yomi: 'せんけいどくりつ', imp: 3, text: R`$X$ の元 $u_1,\dots,u_k$（$k\in\mathbb{N}$）が<b class="term">線形独立</b>であるとは、
@@ -118,7 +117,7 @@ $$\sum_{j=1}^k\alpha_ju_j=0\ \ (\alpha_j\in\mathbb{K})\Longrightarrow\alpha_1=\a
 
       { t: 'h2', id: 'subspace', text: '部分空間と生成' },
       { t: 'def', id: 'def-subspace', title: '部分空間', yomi: 'ぶぶんくうかん', imp: 3, text: R`$X$ を線形空間とする。空でない部分集合 $X_0\subset X$ が $X$ の<b class="term">部分空間</b>（線形部分空間）であるとは、任意の $f,g\in X_0$ と任意の $\alpha\in\mathbb{K}$ について $f+g\in X_0$、$\alpha f\in X_0$ が成り立つことをいう。` },
-      { t: 'rem', title: '「空でない」を忘れない', text: R`資料の定義には「空でない」が書かれていないが、$X_0=\emptyset$ だと条件は[[propositional-logic#rem-vacuous|空虚に真]]になってしまう。空でなければ、$f\in X_0$ をとって $0=0f\in X_0$（[[vector-space#prop-zero-unique|命題]]）となり、零元を必ず含む。逆に「$0\in X_0$ かどうか」は、部分空間でないことを示すのに便利な目印である。` },
+      { t: 'rem', title: '「空でない」を忘れない', text: R`定義に「空でない」を入れ忘れると、$X_0=\emptyset$ だと条件は[[propositional-logic#rem-vacuous|空虚に真]]になってしまう。空でなければ、$f\in X_0$ をとって $0=0f\in X_0$（[[vector-space#prop-zero-unique|命題]]）となり、零元を必ず含む。逆に「$0\in X_0$ かどうか」は、部分空間でないことを示すのに便利な目印である。` },
       { t: 'prop', id: 'prop-subspace-vs', title: '部分空間はそれ自身が線形空間', yomi: 'ぶぶんくうかんはせんけいくうかん', imp: 2, text: R`$X_0$ が $X$ の部分空間ならば、$X$ の和とスカラー倍を $X_0$ に制限したものによって、$X_0$ は線形空間になる。` },
       { t: 'proof', steps: [{ text: R`和とスカラー倍が $X_0$ の中で閉じていることは定義そのもの。(i)(ii)(v)〜(viii) は $X$ のすべての元で成り立つので、特に $X_0$ の元で成り立つ。(iii)：$f\in X_0$ をとると $0=0f\in X_0$。(iv)：$f\in X_0$ なら $-f=(-1)f\in X_0$（[[vector-space#prop-zero-unique|命題]]）。` }] },
       { t: 'ex', id: 'ex-subspace', title: '部分空間の例', text: R`<ol><li>$C^1([a,b]):=\{f\in C([a,b])\mid f'\in C([a,b])\}$ は $C([a,b])$ の部分空間（和と定数倍の微分 $(f+g)'=f'+g'$、$(\alpha f)'=\alpha f'$ は連続）。</li><li>$\{f\in C([0,1])\mid f(0)=0\}$ は部分空間。$\{f\in C([0,1])\mid f(0)=1\}$ は零元（恒等的に $0$）を含まないので部分空間でない。</li><li>多項式関数全体 $\mathcal{P}([a,b])$ は $C([a,b])$ の部分空間。</li></ol>` },
@@ -148,7 +147,7 @@ $$M:=\Bigl\{\sum_{j=1}^k\alpha_ju_j\ \Bigm|\ k\in\mathbb{N},\ u_j\in A,\ \alpha_
   A.push({
     id: 'normed-space',
     title: 'ノルム空間',
-    sub: 'ノルム・収束・閉部分空間・ノルムの同値（資料 第 2 章）',
+    sub: 'ノルム・収束・閉部分空間・ノルムの同値',
     yomi: 'のるむくうかん',
     aliases: ['ノルム', 'のるむ', 'ノルム空間', 'のるむくうかん', 'ノルム収束', '最大値ノルム', 'さいだいちのるむ', '上限ノルム', '閉部分空間', 'へいぶぶんくうかん', 'ノルムの同値', 'どうちなのるむ', '同値なノルム', '有限次元'],
     kind: '用語',
@@ -160,7 +159,7 @@ $$M:=\Bigl\{\sum_{j=1}^k\alpha_ju_j\ \Bigm|\ k\in\mathbb{N},\ u_j\in A,\ \alpha_
     notation: [
       NOTE_K,
       R`$\|\cdot\|_X:X\to\mathbb{R}$：ノルム。$\|f\|_X$ は「$f$ の長さ（大きさ）」。混乱のおそれがなければ $\|f\|$ と書く。点 $\cdot$ は「ここに元が入る」という目印。`,
-      R`点列 $\{f_k\}\subset X$：番号 $k\in\mathbb{N}$ ごとに $f_k\in X$ がただ一つ定まる対応（資料の定義）。`,
+      R`点列 $\{f_k\}\subset X$：番号 $k\in\mathbb{N}$ ごとに $f_k\in X$ がただ一つ定まる対応。`,
       R`$\displaystyle\lim_{k\to\infty}f_k=f\ \text{in }X$：$X$ のノルムで収束すること（「in $X$」はどのノルムでの収束かを強調する書き方）。`,
       R`$\|f\|_{C(I)}:=\max_{x\in I}|f(x)|$（$I=[a,b]$）：最大値ノルム。$\|a\|_{\ell^1}:=\sum_{k=1}^\infty|a_k|$。`,
       R`$\overline A$：$A$ の閉包（ノルムから定まる距離 $d(f,g)=\|f-g\|$ についての[[closure#def-closure|閉包]]）。$N(a;\varepsilon)=\{f\mid\|f-a\|<\varepsilon\}$。`,
@@ -180,7 +179,7 @@ $$M:=\Bigl\{\sum_{j=1}^k\alpha_ju_j\ \Bigm|\ k\in\mathbb{N},\ u_j\in A,\ \alpha_
       { t: 'ex', id: 'ex-norm-c', title: 'C(I) の最大値ノルム', text: R`$I=[a,b]$ とする。$f\in C(I)$ について $\|f\|_{C(I)}:=\max_{x\in I}|f(x)|$。最大値は $|f|\in C(I)$ に[[extreme-value#thm-evt|最大値の定理]]を使えば存在する。(i)：最大値が $0$ なら各 $x$ で $|f(x)|=0$。(ii)：$|\alpha f(x)|=|\alpha||f(x)|$ の最大値。(iii)：各 $x\in I$ で
 $$|f(x)+g(x)|\le|f(x)|+|g(x)|\le\|f\|_{C(I)}+\|g\|_{C(I)}.$$
 右辺は $x$ によらないので、左辺の最大値をとって $\|f+g\|_{C(I)}\le\|f\|_{C(I)}+\|g\|_{C(I)}$。このノルムでの収束は[[uniform-convergence#prop-unif-sup|一様収束]]そのものである。` },
-      { t: 'ex', id: 'ex-norm-c1', title: 'C(I) の積分ノルム', text: R`$I=[a,b]$、$f\in C(I)$ について $\|f\|_{R^1(I)}:=\int_a^b|f(x)|\,dx$（資料の記号）もノルムになる。(i) の「$\|f\|=0\Rightarrow f=0$」に $f$ の連続性が必要なこと（[[integral-properties#prob-1|問題]]）に注意。同じ $C(I)$ に、最大値ノルムと積分ノルムという二つのノルムが入る。` },
+      { t: 'ex', id: 'ex-norm-c1', title: 'C(I) の積分ノルム', text: R`$I=[a,b]$、$f\in C(I)$ について $\|f\|_{R^1(I)}:=\int_a^b|f(x)|\,dx$もノルムになる。(i) の「$\|f\|=0\Rightarrow f=0$」に $f$ の連続性が必要なこと（[[integral-properties#prob-1|問題]]）に注意。同じ $C(I)$ に、最大値ノルムと積分ノルムという二つのノルムが入る。` },
 
       { t: 'h2', id: 'conv', text: '収束と距離' },
       { t: 'def', id: 'def-norm-conv', title: 'ノルム収束', yomi: 'のるむしゅうそく', imp: 3, text: R`ノルム空間 $X$ の点列 $\{f_k\}\subset X$ が $f\in X$ に<b class="term">収束する</b>（ノルム収束する）とは、
@@ -208,7 +207,6 @@ $$\forall\varepsilon>0,\ \exists N=N(\varepsilon)\in\mathbb{N}\ \text{ s.t. }\ \
           { text: R`$f+g$ と $\alpha f$ は $X_0$ の点列の極限なので、再び点列による特徴づけより $\overline{X_0}$ に属する。` },
         ],
       },
-      { t: 'rem', title: '資料の脚注 *2 の内容', text: R`資料の脚注は「閉集合の点列の極限点はその閉集合に属する」ことを、$\varepsilon/2$ を使って直接示している。これは[[closure#cor-closed-seq|閉集合の点列による特徴づけ]]の一般的な証明と同じである。` },
       { t: 'def', id: 'def-closed-span', title: '生成する閉部分空間', yomi: 'せいせいするへいぶぶんくうかん', imp: 2, text: R`ノルム空間 $X$ の部分集合 $A\ne\emptyset$ について、$A$ が[[vector-space#def-span|生成する部分空間]] $M=\operatorname{span}A$ の閉包 $\overline M$ を、$A$ が<b class="term">生成する閉部分空間</b>という。` },
       { t: 'prop', id: 'prop-closed-span-min', title: '生成する閉部分空間は最小の閉部分空間', yomi: 'さいしょうのへいぶぶんくうかん', imp: 2, text: R`$\overline{\operatorname{span}A}$ は $A$ を含む閉部分空間であり、$A$ を含む任意の閉部分空間 $L$ について $\overline{\operatorname{span}A}\subset L$。` },
       { t: 'proof', steps: [{ text: R`[[normed-space#thm-closure-sub|定理]]より閉部分空間で、$A\subset\operatorname{span}A\subset\overline{\operatorname{span}A}$。$L\supset A$ を閉部分空間とすると、$L$ は部分空間なので[[vector-space#prop-span-min|最小性]]より $\operatorname{span}A\subset L$。$L$ は閉集合なので、[[closure#thm-closure-min|閉包の最小性]]より $\overline{\operatorname{span}A}\subset L$。` }] },
@@ -233,7 +231,7 @@ $$\|x\|_\infty\le\|x\|_2\le\|x\|_1\le2\|x\|_\infty$$
             eqs: [[R`\|f\|=\Bigl\|\sum_{j=1}^dc_je_j\Bigr\|\le\sum_{j=1}^d|c_j|\,\|e_j\|\le\Bigl(\max_j|c_j|\Bigr)\sum_{j=1}^d\|e_j\|=M\|f\|_0.`, R`三角不等式（帰納法）・斉次性`]],
           },
           { text: R`<b>ステップ 3：関数 φ とその連続性。</b>$\varphi:\mathbb{K}^d\to\mathbb{R}$, $\varphi(c):=\bigl\|\sum_{j=1}^dc_je_j\bigr\|$ と定める。$c,c'\in\mathbb{K}^d$ について、逆向きの三角不等式とステップ 2 の計算より $|\varphi(c)-\varphi(c')|\le\bigl\|\sum(c_j-c_j')e_j\bigr\|\le M\max_j|c_j-c_j'|$。$\max_j|c_j-c_j'|\le\|c-c'\|$（$\mathbb{K}^d$ のユークリッドノルム。[[euclidean-space#cor-norm-rn|成分は長さ以下]]）なので、$\varphi$ は $\mathbb{K}^d$ 上でリプシッツ連続である。` },
-          { text: R`<b>ステップ 4：S のコンパクト性。</b>$S:=\{c\in\mathbb{K}^d\mid\max_j|c_j|=1\}$ とおく（資料の「$\mathbb{K}^n$」は $\mathbb{K}^d$ の誤植）。$c\mapsto\max_j|c_j|$ は連続なので $S$ は $\{1\}$ の逆像として閉集合（[[metric-continuity#ex-level|例]]）、また $\|c\|\le\sqrt d\max|c_j|=\sqrt d$ なので有界。$\mathbb{K}^d$ は $\mathbb{R}^d$（$\mathbb{K}=\mathbb{R}$）または $\mathbb{R}^{2d}$（$\mathbb{K}=\mathbb{C}$）と同一視できるので、[[compactness#thm-heine-borel|有界閉集合は点列コンパクト]]。` },
+          { text: R`<b>ステップ 4：S のコンパクト性。</b>$S:=\{c\in\mathbb{K}^d\mid\max_j|c_j|=1\}$ とおく。$c\mapsto\max_j|c_j|$ は連続なので $S$ は $\{1\}$ の逆像として閉集合（[[metric-continuity#ex-level|例]]）、また $\|c\|\le\sqrt d\max|c_j|=\sqrt d$ なので有界。$\mathbb{K}^d$ は $\mathbb{R}^d$（$\mathbb{K}=\mathbb{R}$）または $\mathbb{R}^{2d}$（$\mathbb{K}=\mathbb{C}$）と同一視できるので、[[compactness#thm-heine-borel|有界閉集合は点列コンパクト]]。` },
           { text: R`<b>ステップ 5：最小値は正。</b>[[compactness#thm-compact-max|最大値・最小値の定理]]より、$\varphi$ は $S$ 上で最小値 $m=\varphi(c^*)$（$c^*\in S$）をとる。もし $m=0$ なら $\sum c^*_je_j=0$ で、線形独立性より $c^*=0$ となるが、$\max|c^*_j|=1$ に反する。よって $m>0$。` },
           {
             text: R`<b>ステップ 6：下からの評価。</b>$f\ne0$ とし $g:=\frac f{\|f\|_0}$ とおくと、$g$ の係数 $\frac{c_j}{\|f\|_0}$ の最大絶対値は $1$ なので、係数の組は $S$ に属し $\|g\|\ge m$。`,

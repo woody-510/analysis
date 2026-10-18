@@ -1,4 +1,4 @@
-/* 第 12 章：バナッハ空間と不動点定理（参考資料 解析学 IV 第 3〜5 章） */
+/* 第 12 章：バナッハ空間と不動点定理 */
 (function () {
   const R = String.raw;
   const A = window.ARTICLES;
@@ -7,7 +7,7 @@
   A.push({
     id: 'banach-space',
     title: 'バナッハ空間',
-    sub: 'コーシー列と完備性（資料 第 3 章）',
+    sub: 'コーシー列と完備性',
     yomi: 'ばなっはくうかん',
     aliases: ['バナッハ空間', 'ばなっはくうかん', 'Banach', '完備', 'かんび', '完備性', 'かんびせい', 'コーシー列', 'こーしーれつ', '絶対収束級数', 'C1級', 'C^1'],
     kind: '用語',
@@ -19,7 +19,7 @@
     notation: [
       R`$X$：ノルム空間（[[normed-space|第 11 章]]）。$\{f_k\}\subset X$：$X$ の点列。$f_k,f_l$ の $k,l\in\mathbb{N}$ は番号。`,
       R`$N=N(\varepsilon)\in\mathbb{N}$：$\varepsilon>0$ に応じて決まる番号。各点ごとの番号は $N_1=N_1(x)$ のように依存する変数を書く。`,
-      R`$\{f_k\}$（関数の列）と $\{f_k(x)\}$（$x$ を固定した数の列）は別物（資料の脚注）。`,
+      R`$\{f_k\}$（関数の列）と $\{f_k(x)\}$（$x$ を固定した数の列）は別物。`,
       R`$C^1(I):=\{f\in C(I)\mid f'\in C(I)\}$（$I=[a,b]$、端点では片側微分）、$\|f\|_{C^1(I)}:=\|f\|_{C(I)}+\|f'\|_{C(I)}$。`,
       R`$\sum_{n=1}^\infty x_n$（$x_n\in X$）：部分和 $s_n:=\sum_{k=1}^nx_k\in X$ のノルム収束の極限。`,
     ],
@@ -53,7 +53,7 @@ $$\forall\varepsilon>0,\ \exists N=N(\varepsilon)\in\mathbb{N}\ \text{ s.t. }\ \
         steps: [
           { text: R`<b>① コーシー列をとる。</b>$\{f_k\}\subset C(I)$ をコーシー列とする。任意の $\varepsilon>0$ に対して $N=N(\varepsilon)\in\mathbb{N}$ があって、$k,l\ge N$ ならば $\max_{x\in I}|f_k(x)-f_l(x)|<\frac\varepsilon2$。` },
           { text: R`<b>② 極限の候補。</b>$x\in I$ を固定すると $|f_k(x)-f_l(x)|\le\|f_k-f_l\|_{C(I)}$ なので、$k,l\ge N$ ならば $|f_k(x)-f_l(x)|<\frac\varepsilon2$ ……(★)。すなわち $\{f_k(x)\}_k$ は $\mathbb{K}$ のコーシー列で、$\mathbb{K}$ の完備性より収束する。その極限を $f(x)$ とおく。これで関数 $f:I\to\mathbb{K}$ が定まる。（この段階の収束は「$x$ ごとに番号 $N_1=N_1(x)$ がある」という各点収束の意味である。）` },
-          { text: R`<b>③ ノルムの意味で近い。</b>$k\ge N$、$x\in I$ を固定する。(★) で $l\to\infty$ とすると、$f_l(x)\to f(x)$ と[[sequence-convergence#prop-order|極限と不等式]]より $|f_k(x)-f(x)|\le\frac\varepsilon2<\varepsilon$。（資料では $N^*=\max(N,N_1)$ をとって三角不等式で示している。同じことである。）この $N$ は $x$ によらないので、$k\ge N$ ならばすべての $x\in I$ で $|f_k(x)-f(x)|<\varepsilon$。` },
+          { text: R`<b>③ ノルムの意味で近い。</b>$k\ge N$、$x\in I$ を固定する。(★) で $l\to\infty$ とすると、$f_l(x)\to f(x)$ と[[sequence-convergence#prop-order|極限と不等式]]より $|f_k(x)-f(x)|\le\frac\varepsilon2<\varepsilon$。この $N$ は $x$ によらないので、$k\ge N$ ならばすべての $x\in I$ で $|f_k(x)-f(x)|<\varepsilon$。` },
           { text: R`<b>④ 空間に属する。</b>③ は「連続関数列 $\{f_k\}$ が $f$ に一様収束する」ことを言っているので、[[uniform-convergence#thm-unif-cont|一様収束の極限は連続]]より $f\in C(I)$。さらに ③ より $k\ge N$ で $\|f_k-f\|_{C(I)}=\max_x|f_k(x)-f(x)|<\varepsilon$（最大値は ③ の不等式をみたす値のどれか）なので、$f_k\to f$ in $C(I)$。` },
         ],
       },
@@ -94,7 +94,7 @@ $$f_k(x):=\begin{cases}1&(0\le x\le\frac12)\\-2kx+k+1&(\frac12\le x\le\frac12+\f
   A.push({
     id: 'banach-fixed-point',
     title: 'バナッハの不動点定理',
-    sub: '縮小写像の原理（資料 第 4 章）',
+    sub: '縮小写像の原理',
     yomi: 'ばなっはのふどうてんていり',
     aliases: ['不動点定理', 'ふどうてんていり', '縮小写像', 'しゅくしょうしゃぞう', '縮小写像の原理', 'しゅくしょうしゃぞうのげんり', '不動点', 'ふどうてん', '逐次近似', 'ちくじきんじ', '縮小定数'],
     kind: '定理',
@@ -107,7 +107,7 @@ $$f_k(x):=\begin{cases}1&(0\le x\le\frac12)\\-2kx+k+1&(\frac12\le x\le\frac12+\f
       R`$(X,d)$：距離空間。$\Phi:X\to X$：写像（自分自身への写像であることが大事）。$\Phi(f)$ を $\Phi f$ とも書く。`,
       R`$r$：縮小定数。$0<r<1$ の実数。`,
       R`$f_0\in X$：出発点。$f_k:=\Phi(f_{k-1})$（$k\in\mathbb{N}$）：反復（逐次近似）。`,
-      R`$f'$：資料の脚注のとおり、ここでは「もう一つの元」の意味で、微分ではない。`,
+      R`$f'$：ここでは「もう一つの元」の意味で、微分ではない。`,
     ],
     synopsis: R`完備距離空間 $X$ から自分自身への写像 $\Phi$ が、2 点の距離を一定の割合 $r<1$ 以下に縮めるならば、$\Phi(f)=f$ となる点（不動点）がただ一つ存在する。しかもどこから出発しても、反復 $f_{k+1}=\Phi(f_k)$ がその不動点に収束する。方程式の解の存在と一意性を示す最も基本的な道具であり、微分方程式の解の存在定理や、偏微分方程式の局所適切性の証明に使われる。`,
     body: [
@@ -142,7 +142,7 @@ $$d(f_k,f)\le\frac{r^k}{1-r}\,d(f_1,f_0)\qquad(k\in\mathbb{N}\cup\{0\}).$$` },
             eqs: [[R`0\le d(\Phi(f),f)\le d(\Phi(f),f_{k+1})+d(f_{k+1},f)=d(\Phi(f),\Phi(f_k))+d(f_{k+1},f)\le r\,d(f,f_k)+d(f_{k+1},f)\xrightarrow[k\to\infty]{}0.`, R`三角不等式・$f_{k+1}=\Phi(f_k)$・縮小性`]],
           },
           { text: R`よって $d(\Phi(f),f)=0$、すなわち $f=\Phi(f)$。` },
-          { text: R`<b>ステップ 4：一意性。</b>$f'\in X$ も $f'=\Phi(f')$ をみたすとすると、$d(f,f')=d(\Phi(f),\Phi(f'))\le r\,d(f,f')$。移項して $(1-r)d(f,f')\le0$、$1-r>0$ なので $d(f,f')\le0$、すなわち $d(f,f')=0$ で $f=f'$。（資料は $f'\ne f$ と仮定して矛盾を導いているが、直接示しても同じである。）` },
+          { text: R`<b>ステップ 4：一意性。</b>$f'\in X$ も $f'=\Phi(f')$ をみたすとすると、$d(f,f')=d(\Phi(f),\Phi(f'))\le r\,d(f,f')$。移項して $(1-r)d(f,f')\le0$、$1-r>0$ なので $d(f,f')\le0$、すなわち $d(f,f')=0$ で $f=f'$。` },
           { text: R`<b>ステップ 5：誤差評価。</b>ステップ 2 の不等式 $d(f_k,f_l)\le\frac{r^l}{1-r}d(f_1,f_0)$ で、$l$ を固定して $k\to\infty$ とすると、$d(f_k,f_l)\to d(f,f_l)$（[[metric-continuity#ex-dist-cont|距離の連続性]]）なので $d(f,f_l)\le\frac{r^l}{1-r}d(f_1,f_0)$。文字 $l$ を $k$ に書きかえれば主張の評価。` },
         ],
       },
@@ -165,7 +165,7 @@ $$d(f_k,f)\le\frac{r^k}{1-r}\,d(f_1,f_0)\qquad(k\in\mathbb{N}\cup\{0\}).$$` },
   A.push({
     id: 'ode-application',
     title: '不動点定理の微分方程式への応用',
-    sub: 'デュアメルの原理・グロンウォールの不等式・時間大域解（資料 第 5 章）',
+    sub: 'デュアメルの原理・グロンウォールの不等式・時間大域解',
     yomi: 'ふどうてんていりのびぶんほうていしきへのおうよう',
     aliases: ['常微分方程式', 'じょうびぶんほうていしき', '初期値問題', 'しょきちもんだい', '積分方程式', 'せきぶんほうていしき', 'デュアメルの原理', 'でゅあめる', 'グロンウォールの不等式', 'ぐろんうぉーる', 'Gronwall', 'リプシッツ条件', '時間大域解', 'じかんたいいきかい', 'ピカール', 'ぴかーる', '逐次近似法'],
     kind: '定理',
@@ -198,7 +198,7 @@ $$u(t)=u_0+\int_0^tf(u(s))\,ds\qquad(t\in I)\tag{IE}$$
           { text: R`(⇐) $u\in C(I)$ が (IE) をみたすとする。$s\mapsto f(u(s))$ は連続なので、[[fundamental-theorem#thm-ftc1|基本定理 (I)]]より右辺は $t$ について微分可能（$t=0$ では右側微分）で、導関数は $f(u(t))$、これは連続。よって $u\in C^1(I)$、$u'(t)=f(u(t))$。$t=0$ を代入して $u(0)=u_0$。` },
         ],
       },
-      { t: 'note', title: '書きかえの意味', text: R`微分方程式は「微分可能な関数」を探す問題だが、積分方程式は「連続関数」を探す問題になる。連続関数の空間 $C(I)$ は（適切なノルムで）完備なので、不動点定理が使える。資料はこの同値性を「デュアメルの原理」と呼んでいる。線形の発展方程式 $u'=Au+F$ では $u(t)=e^{tA}u_0+\int_0^te^{(t-s)A}F(s)\,ds$ という形になり、これが[[nls|シュレディンガー方程式]]で使うデュアメルの公式の原型である。` },
+      { t: 'note', title: '書きかえの意味', text: R`微分方程式は「微分可能な関数」を探す問題だが、積分方程式は「連続関数」を探す問題になる。連続関数の空間 $C(I)$ は（適切なノルムで）完備なので、不動点定理が使える。線形の発展方程式 $u'=Au+F$ では $u(t)=e^{tA}u_0+\int_0^te^{(t-s)A}F(s)\,ds$ という形になり、これが[[nls|シュレディンガー方程式]]で使うデュアメルの公式の原型である。` },
 
       { t: 'h2', id: 'gronwall', text: 'グロンウォールの不等式' },
       { t: 'thm', id: 'thm-gronwall', title: 'グロンウォールの不等式', yomi: 'ぐろんうぉーるのふとうしき', imp: 3, text: R`$\alpha\in\mathbb{R}$、$a<b$、$I=[a,b]$ とし、$g,h\in C(I)$、すべての $t\in I$ で $g(t)\ge0$ とする。
@@ -254,7 +254,7 @@ $$h(t)\le\alpha+\int_a^tg(s)h(s)\,ds\quad(t\in I)\qquad\Longrightarrow\qquad h(t
           { text: R`<b>ステップ 4：$C^1(I)$ での一意性。</b>$u,\tilde u\in C^1(I)$ をともに (IVP) の解とし、$T>0$ を任意に固定する。デュアメルの原理より両方 (IE) をみたすので、$t\in[0,T]$ で $|u(t)-\tilde u(t)|\le\int_0^t|f(u(s))-f(\tilde u(s))|\,ds\le L\int_0^t|u(s)-\tilde u(s)|\,ds$。$h:=|u-\tilde u|\in C([0,T])$ に[[ode-application#cor-gronwall-zero|グロンウォールの系]]を使うと $h\equiv0$。$T$ は任意なので $I$ 上で $u=\tilde u$。` },
         ],
       },
-      { t: 'rem', title: '「一意性はもっと広い集合でいえている」', text: R`不動点定理から得られる一意性は「$X_k$ の中で」だけである。ステップ 4 のグロンウォールの議論は、$X_k$ に属するかどうかを問わず「$C^1(I)$ の解はただ一つ」と言っている。したがって、もし他の方法で $C^1$ 級の解が見つかれば、それは上で構成した解と同じものである（資料の注意）。` },
+      { t: 'rem', title: '「一意性はもっと広い集合でいえている」', text: R`不動点定理から得られる一意性は「$X_k$ の中で」だけである。ステップ 4 のグロンウォールの議論は、$X_k$ に属するかどうかを問わず「$C^1(I)$ の解はただ一つ」と言っている。したがって、もし他の方法で $C^1$ 級の解が見つかれば、それは上で構成した解と同じものである。` },
       { t: 'ex', id: 'ex-picard', title: '逐次近似の様子：u′ = u, u(0) = 1', text: R`$f(u)=u$（$L=1$）とする。$u_0(t)\equiv1$ から $u_{j+1}(t)=1+\int_0^tu_j(s)\,ds$ と反復すると、$u_1=1+t$、$u_2=1+t+\frac{t^2}2$、…、$u_j(t)=\sum_{m=0}^j\frac{t^m}{m!}$ となり、[[power-series#def-exp|指数関数]] $e^t$ の部分和が現れる。解は $u(t)=e^t$ である。` },
       { t: 'fig', type: 'plot', preset: 'picard', caption: R`$u'=u$, $u(0)=1$ の逐次近似 $u_1=1+t$、$u_2$、$u_3$（色・線種の違い）と、解 $e^t$。反復のたびに、より長い時間まで解に近くなる。` },
       { t: 'rem', title: 'リプシッツ条件がないとき', text: R`<ul><li><b>一意性が崩れる：</b>$f(u)=2\sqrt{|u|}$、$u_0=0$ とすると、$u\equiv0$ と $u(t)=t^2$ がどちらも解になる（$(t^2)'=2t=2\sqrt{t^2}$）。$f$ は $u=0$ の近くでリプシッツ条件をみたさない（$\frac{2\sqrt{|u|}}{|u|}\to\infty$）。</li><li><b>大域的に存在しない：</b>$f(u)=u^2$ は各有界区間ではリプシッツだが $\mathbb{R}$ 全体ではリプシッツでない。$u_0=1$ の解は $u(t)=\frac1{1-t}$ で、$t\to1$ で無限大に発散する（爆発）。このような場合は、短い時間区間での局所解を不動点定理で作り、それをどこまで延ばせるか（大域可解性）を別に調べる。これは非線形偏微分方程式の研究の基本的な問題設定である（[[local-wellposedness|局所適切性]]）。</li></ul>` },

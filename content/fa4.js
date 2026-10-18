@@ -1,4 +1,4 @@
-/* 第 14 章：線形作用素（参考資料 解析学 IV 第 10〜12 章） */
+/* 第 14 章：線形作用素 */
 (function () {
   const R = String.raw;
   const A = window.ARTICLES;
@@ -14,7 +14,7 @@
   A.push({
     id: 'linear-operator',
     title: '線形作用素',
-    sub: '連続性と有界性（資料 第 10 章）',
+    sub: '連続性と有界性',
     yomi: 'せんけいさようそ',
     aliases: ['線形作用素', 'せんけいさようそ', '作用素', 'さようそ', '線形写像', 'せんけいしゃぞう', '有界作用素', 'ゆうかいさようそ', '連続作用素', 'れんぞくさようそ', '定義域', 'ていぎいき', '値域', 'ちいき', '恒等作用素', '積分作用素', '微分作用素', 'シフト作用素'],
     kind: '用語',
@@ -31,7 +31,7 @@
 $$T(\alpha f+\beta g)=\alpha T(f)+\beta T(g)\qquad(f,g\in D,\ \alpha,\beta\in\mathbb{K})$$
 が成り立つことをいう。線形な写像を<b class="term">線形作用素</b>という。$T$ の定義域 $D$ を $D(T)$、値域を $R(T):=\{T(f)\mid f\in D(T)\}$ と書く。` },
       { t: 'prop', id: 'prop-linop-basic', title: '線形作用素の基本性質', yomi: 'せんけいさようそのせいしつ', imp: 2, text: R`線形作用素 $T:D(T)\to Y$ について、$T(0)=0$。また値域 $R(T)$ と<b class="term">核</b> $N(T):=\{f\in D(T)\mid T(f)=0\}$ はそれぞれ $Y$、$X$ の部分空間である。さらに $T$ が単射であることと $N(T)=\{0\}$ は同値である。` },
-      { t: 'proof', steps: [{ text: R`$T(0)=T(0\cdot0)=0\cdot T(0)=0$（[[vector-space#prop-zero-unique|$0f=0$]]）。$R(T)$：$T(f),T(g)\in R(T)$ なら $\alpha T(f)+\beta T(g)=T(\alpha f+\beta g)\in R(T)$（資料の脚注 *2）。$N(T)$：$T(f)=T(g)=0$ なら $T(\alpha f+\beta g)=0$。単射性：$T$ が単射で $T(f)=0=T(0)$ なら $f=0$。逆に $N(T)=\{0\}$ で $T(f)=T(g)$ なら $T(f-g)=0$ より $f=g$。` }] },
+      { t: 'proof', steps: [{ text: R`$T(0)=T(0\cdot0)=0\cdot T(0)=0$（[[vector-space#prop-zero-unique|$0f=0$]]）。$R(T)$：$T(f),T(g)\in R(T)$ なら $\alpha T(f)+\beta T(g)=T(\alpha f+\beta g)\in R(T)$。$N(T)$：$T(f)=T(g)=0$ なら $T(\alpha f+\beta g)=0$。単射性：$T$ が単射で $T(f)=0=T(0)$ なら $f=0$。逆に $N(T)=\{0\}$ で $T(f)=T(g)$ なら $T(f-g)=0$ より $f=g$。` }] },
       { t: 'thm', id: 'thm-int-op', title: '積分作用素は線形', yomi: 'せきぶんさようそ', imp: 2, text: R`$X=D=Y=C([0,1])$ とし、$f\in D$ に対して $(Tf)(x):=\int_0^xf(t)\,dt$（$x\in[0,1]$）と定めると、$T$ は線形作用素である。` },
       {
         t: 'proof',
@@ -84,7 +84,7 @@ $$\|T(f)\|_Y\le M\|f\|_X\qquad(f\in D(T))$$
   A.push({
     id: 'operator-norm',
     title: '作用素ノルム',
-    sub: 'L(X, Y) の完備性（資料 第 11 章）',
+    sub: 'L(X, Y) の完備性',
     yomi: 'さようそのるむ',
     aliases: ['作用素ノルム', 'さようそのるむ', 'L(X,Y)', '有界線形作用素の空間', '双対空間', 'そうついくうかん', '行列のノルム'],
     kind: '定理',
@@ -121,7 +121,7 @@ $$\|T\|_B=\sup_{f\in D(T),\ \|f\|_X=1}\|T(f)\|_Y=\sup_{f\in D(T),\ \|f\|_X\le1}\
         steps: [
           { text: R`$a:=\sup_{\|f\|=1}\|Tf\|$、$b:=\sup_{\|f\|\le1}\|Tf\|$ とおく。$\|f\|=1$ の元は $\|f\|\le1$ の元でもあるので $a\le b$。` },
           { text: R`$f\ne0$ について $\frac{f}{\|f\|}$ はノルム $1$ で、線形性より $\frac{\|Tf\|}{\|f\|}=\bigl\|T\bigl(\frac f{\|f\|}\bigr)\bigr\|\le a$。上限をとって $\|T\|_B\le a$。` },
-          { text: R`$\|f\|\le1$ なら $\|Tf\|\le\|T\|_B\|f\|\le\|T\|_B$（命題 (1)）なので $b\le\|T\|_B$。以上で $\|T\|_B\le a\le b\le\|T\|_B$。（資料の脚注は $f=0$ を含むかどうかの細かい場合分けを扱っているが、命題 (1) を使うと一度に済む。）` },
+          { text: R`$\|f\|\le1$ なら $\|Tf\|\le\|T\|_B\|f\|\le\|T\|_B$（命題 (1)）なので $b\le\|T\|_B$。以上で $\|T\|_B\le a\le b\le\|T\|_B$。` },
         ],
       },
       { t: 'prop', id: 'prop-opnorm-comp', title: '合成のノルム', yomi: 'ごうせいのるむ', imp: 2, text: R`$T\in L(X,Y)$、$S\in L(Y,Z)$ ならば $ST:=S\circ T\in L(X,Z)$ で $\|ST\|\le\|S\|\,\|T\|$。特に $T\in L(X)$ について $\|T^k\|\le\|T\|^k$（$k\in\mathbb{N}$）。` },
@@ -130,7 +130,7 @@ $$\|T\|_B=\sup_{f\in D(T),\ \|f\|_X=1}\|T(f)\|_Y=\sup_{f\in D(T),\ \|f\|_X\le1}\
       { t: 'h2', id: 'examples', text: '例' },
       { t: 'ex', id: 'ex-opnorm-int', title: '積分汎関数のノルム', text: R`$I=[a,b]$、$T(f):=\int_a^bf(x)\,dx$（$f\in C(I)$）とすると $T\in L(C(I),\mathbb{R})$ で $\|T\|=b-a$。実際 $|T(f)|\le\int_a^b|f|\le(b-a)\|f\|_{C(I)}$ より $\|T\|\le b-a$。$f\equiv1$ とすると $\frac{|T(1)|}{\|1\|_{C(I)}}=b-a$ なので $\|T\|\ge b-a$。` },
       { t: 'ex', id: 'ex-opnorm-matrix', title: '行列の作用素ノルム', text: R`$X=\mathbb{R}^2$（ユークリッドノルム）、$A=\begin{pmatrix}a&b\\c&d\end{pmatrix}$、$T_Ax:=Ax$ とし、$\|A\|_0:=\sqrt{a^2+b^2+c^2+d^2}$ とおく。
-<ul><li>$\|T_A\|\le\|A\|_0$：コーシー＝シュワルツより $|ax_1+bx_2|\le\sqrt{a^2+b^2}\|x\|$、$|cx_1+dx_2|\le\sqrt{c^2+d^2}\|x\|$ なので $\|Ax\|^2\le(a^2+b^2+c^2+d^2)\|x\|^2$。</li><li>$\|A\|_0\le\sqrt2\|T_A\|$：$\|A\|_0^2=\|T_Ae_1\|^2+\|T_Ae_2\|^2\le2\|T_A\|^2$（$e_1=(1,0)$, $e_2=(0,1)$ はノルム $1$）。</li></ul>よって $\frac1{\sqrt2}\|A\|_0\le\|T_A\|\le\|A\|_0$ で、二つのノルムは同値である（有限次元なので[[normed-space#thm-equiv-fin|当然]]だが、定数が具体的にわかる）。資料ではもう少し粗い定数 $\|T_A\|\le2\|A\|_0\le4\|T_A\|$ で示している。対角行列 $\operatorname{diag}(\lambda_1,\lambda_2)$ なら $\|T_A\|=\max|\lambda_j|$。` },
+<ul><li>$\|T_A\|\le\|A\|_0$：コーシー＝シュワルツより $|ax_1+bx_2|\le\sqrt{a^2+b^2}\|x\|$、$|cx_1+dx_2|\le\sqrt{c^2+d^2}\|x\|$ なので $\|Ax\|^2\le(a^2+b^2+c^2+d^2)\|x\|^2$。</li><li>$\|A\|_0\le\sqrt2\|T_A\|$：$\|A\|_0^2=\|T_Ae_1\|^2+\|T_Ae_2\|^2\le2\|T_A\|^2$（$e_1=(1,0)$, $e_2=(0,1)$ はノルム $1$）。</li></ul>よって $\frac1{\sqrt2}\|A\|_0\le\|T_A\|\le\|A\|_0$ で、二つのノルムは同値である（有限次元なので[[normed-space#thm-equiv-fin|当然]]だが、定数が具体的にわかる）。対角行列 $\operatorname{diag}(\lambda_1,\lambda_2)$ なら $\|T_A\|=\max|\lambda_j|$。` },
 
       { t: 'h2', id: 'complete', text: 'L(X, Y) の完備性' },
       { t: 'thm', id: 'thm-lxy-complete', title: 'L(X, Y) はバナッハ空間', yomi: 'えるえっくすわいのかんびせい', imp: 3, text: R`$X$ をノルム空間、$Y$ をバナッハ空間とする。このとき $L(X,Y)$ は作用素ノルムに関してバナッハ空間である。` },
@@ -159,7 +159,7 @@ $$\|T\|_B=\sup_{f\in D(T),\ \|f\|_X=1}\|T(f)\|_Y=\sup_{f\in D(T),\ \|f\|_X\le1}\
   A.push({
     id: 'extension-theorem',
     title: '拡張定理',
-    sub: '稠密な定義域からの延長（資料 第 12 章前半）',
+    sub: '稠密な定義域からの延長',
     yomi: 'かくちょうていり',
     aliases: ['拡張定理', 'かくちょうていり', '延長定理', 'えんちょうていり', '有界線形作用素の拡張', 'BLT定理'],
     kind: '定理',
@@ -175,7 +175,6 @@ $$\|T\|_B=\sup_{f\in D(T),\ \|f\|_X=1}\|T(f)\|_Y=\sup_{f\in D(T),\ \|f\|_X\le1}\
       { t: 'thm', id: 'thm-extension', title: '拡張定理', yomi: 'かくちょうていり', imp: 3, text: R`$X$ をノルム空間、$Y$ をバナッハ空間とし、定義域が $X$ で稠密（$\overline{D(T)}=X$）な有界線形作用素 $T:D(T)\to Y$ を考える。このとき、$D(\widetilde T)=X$ で
 $$\widetilde T(u)=T(u)\quad(u\in D(T)),\qquad\|\widetilde T\|_B=\|T\|_B$$
 をみたす有界線形作用素 $\widetilde T$ がただ一つ存在する。` },
-      { t: 'rem', title: '資料との違い', text: R`資料では $X,Y$ ともバナッハ空間と仮定しているが、証明で使うのは $Y$ の完備性だけである（$X$ は稠密性のためにだけ現れる）。` },
       { t: 'strategy', text: R`$u\in X$ に近づく点列 $u_k\in D(T)$ をとり、$\widetilde T(u):=\lim T(u_k)$ と定義したい。そのために (1) 極限が存在すること（$\{T(u_k)\}$ がコーシー列）、(2) 点列の選び方によらないこと、(3) 線形・有界・ノルムが等しいこと、(4) 一意性、を順に示す。` },
       {
         t: 'proof',
@@ -206,7 +205,7 @@ $$\widetilde T(u)=T(u)\quad(u\in D(T)),\qquad\|\widetilde T\|_B=\|T\|_B$$
   A.push({
     id: 'neumann-series',
     title: 'ノイマン級数',
-    sub: '逆作用素と作用素の等比級数（資料 第 12 章後半）',
+    sub: '逆作用素と作用素の等比級数',
     yomi: 'のいまんきゅうすう',
     aliases: ['ノイマン級数', 'のいまんきゅうすう', 'Neumann', '逆作用素', 'ぎゃくさようそ', '作用素のべき', 'さようそのべき', 'レゾルベント', 'れぞるべんと', 'ボルテラ作用素', 'ぼるてら', '摂動', 'せつどう'],
     kind: '定理',
@@ -261,7 +260,7 @@ $$T^{-1}(T(f))=f\quad(f\in D(T)),\qquad T(T^{-1}(g))=g\quad(g\in R(T))$$
       { t: 'note', title: '言い換え：方程式の解', text: R`定理は「$\|T\|<1$ なら、方程式 $u-Tu=g$ は任意の $g\in X$ に対してただ一つの解 $u=\sum_{k=0}^\infty T^kg$ をもち、$\|u\|\le\frac{\|g\|}{1-\|T\|}$」と言いかえられる。これは $\Phi(u):=g+Tu$ に[[banach-fixed-point#thm-banach-fp|不動点定理]]を使っても示せる（$\|\Phi u-\Phi v\|\le\|T\|\|u-v\|$）。反復 $u_{k+1}=g+Tu_k$（$u_0=0$）は、ちょうどノイマン級数の部分和 $\sum_{j=0}^kT^jg$ になる。` },
       { t: 'ex', id: 'ex-neumann-matrix', title: '行列の例', text: R`$X=\mathbb{R}^2$、$A=\begin{pmatrix}1/2&0\\0&1/2\end{pmatrix}$ とすると $\|T_A\|=\sup_{\|x\|=1}\sqrt{(x_1/2)^2+(x_2/2)^2}=\frac12$。よって
 $$(I-T_A)^{-1}=\sum_{k=0}^\infty T_A^k=\begin{pmatrix}\sum(1/2)^k&0\\0&\sum(1/2)^k\end{pmatrix}=\begin{pmatrix}2&0\\0&2\end{pmatrix}.$$
-直接計算すると $E-A=\operatorname{diag}(\frac12,\frac12)$ で、その逆行列は $2E$ なので一致する（資料の「$(E-A)^{-1}=A^{-1}$」は、この例で $E-A=A$ となっているためである）。方程式 $(I-T_A)x=b$ の解は $x=2b$。` },
+直接計算すると $E-A=\operatorname{diag}(\frac12,\frac12)$ で、その逆行列は $2E$ なので一致する。方程式 $(I-T_A)x=b$ の解は $x=2b$。` },
       { t: 'ex', id: 'ex-neumann-volterra', title: '積分作用素の例', text: R`$X=C([0,1])$、$(Tf)(x):=\frac12\int_0^xf(t)\,dt$ とすると $\|T\|\le\frac12$（[[operator-norm#prob-1|問題]]の $\frac12$ 倍）。$g\equiv1$ として $u=(I-T)^{-1}1=\sum_kT^k1$ を計算する。帰納法で $T^k1=\frac{x^k}{2^kk!}$（$T\bigl(\frac{t^m}{2^mm!}\bigr)=\frac12\int_0^x\frac{t^m}{2^mm!}dt=\frac{x^{m+1}}{2^{m+1}(m+1)!}$）なので、$u(x)=\sum_k\frac{(x/2)^k}{k!}=e^{x/2}$。これは[[banach-fixed-point#ex-int-eq|不動点定理の例]] $u=1+\frac12\int_0^xu$ の解と一致する。` },
 
       { t: 'h2', id: 'more', text: '一般化と応用' },
@@ -281,7 +280,7 @@ $$(I-T_A)^{-1}=\sum_{k=0}^\infty T_A^k=\begin{pmatrix}\sum(1/2)^k&0\\0&\sum(1/2)
   A.push({
     id: 'fa-summary',
     title: '関数解析のまとめ',
-    sub: '重要度・覚えること・証明の型・よくある間違い（資料 第 1〜17 章）',
+    sub: '重要度・覚えること・証明の型・よくある間違い',
     yomi: 'かんすうかいせきのまとめ',
     aliases: ['まとめ', '重要度ランキング', 'じゅうようど', '覚えることリスト', 'おぼえること', 'テスト対策', 'てすとたいさく', '証明の型', 'よくある間違い', '誤植一覧', 'ごしょく'],
     kind: 'まとめ',
@@ -290,8 +289,8 @@ $$(I-T_A)^{-1}=\sum_{k=0}^\infty T_A^k=\begin{pmatrix}\sum(1/2)^k&0\\0&\sum(1/2)
     importance: 3,
     prereq: ['vector-space', 'normed-space', 'banach-space', 'hilbert-space', 'linear-operator'],
     related: ['banach-fixed-point', 'projection-theorem', 'neumann-series', 'metric-space'],
-    notation: [R`★★★：定義をそのまま書け、証明を再現できるようにしておきたいもの。★★：意味を説明でき、簡単な確認ができればよいもの。★：流れを理解するために読んでおけばよいもの。（重要度は、参考資料の書き方と一般的な出題傾向からの目安である。実際の出題範囲は授業の指示を優先すること。）`],
-    synopsis: R`参考資料（解析学 IV）第 1〜17 章の内容を、重要度ごとに並べ、覚えるべき定義、繰り返し使う証明の型、間違えやすい点と資料の誤植をまとめた。各項目から本文の記事に飛べる。`,
+    notation: [R`★★★：定義をそのまま書け、証明を再現できるようにしておきたいもの。★★：意味を説明でき、簡単な確認ができればよいもの。★：流れを理解するために読んでおけばよいもの。（重要度は一般的な出題傾向からの目安である。実際の出題範囲は授業の指示を優先すること。）`],
+    synopsis: R`関数解析（第 11〜14 章）の内容を、重要度ごとに並べ、覚えるべき定義、繰り返し使う証明の型、間違えやすい点をまとめた。各項目から本文の記事に飛べる。`,
     body: [
       { t: 'h2', id: 'rank', text: '重要度ランキング' },
       { t: 'table', html: R`<table class="tbl"><tr><th>重要度</th><th>項目</th><th>できるようにしておくこと</th></tr>
@@ -332,7 +331,6 @@ $$(I-T_A)^{-1}=\sum_{k=0}^\infty T_A^k=\begin{pmatrix}\sum(1/2)^k&0\\0&\sum(1/2)
 
       { t: 'h2', id: 'mistakes', text: 'よくある間違い' },
       { t: 'note', title: '間違えやすいところ', text: R`<ul><li><b>「有界な作用素」は「値が有界」ではない</b>：$\|Tf\|\le M\|f\|$ の意味（[[linear-operator#def-bdd-op|注意]]）。</li><li><b>線形結合はつねに有限和</b>：無限和はノルムがあって初めて意味をもつ（[[vector-space#def-span|生成]]）。</li><li><b>部分空間は空でない</b>：$0$ を含むかどうかで部分空間でないことを示せる。</li><li><b>完備性はノルムによる</b>：同じ $C([0,1])$ でも最大値ノルムでは完備、積分ノルムでは完備でない。</li><li><b>有限次元の結果を無限次元に使わない</b>：ボルツァーノ＝ワイエルシュトラス、ノルムの同値、「単射 ⇔ 全射」は無限次元では成り立たない（[[linear-operator#ex-linop|シフト作用素]]）。</li><li><b>不動点定理では $\Phi(X)\subset X$ を確かめる</b>（[[banach-fixed-point#thm|反例]]）。</li><li><b>極限をとると $<$ は $\le$ になる</b>：だから最初に $\frac\varepsilon2$ を使う。</li><li><b>横線の意味</b>：数の上なら複素共役、集合の上なら閉包。</li><li><b>$f'$ の意味</b>：不動点定理の証明の $f'$ は「別の元」で、微分ではない。</li></ul>` },
-      { t: 'rem', title: '資料の誤植・表示の乱れ（このサイトで補ったもの）', text: R`<ul><li>第 1 章：$\ell^1$ は「収束する数列全体」ではなく「絶対値の和が収束する数列全体」（[[vector-space|線形空間]]）。</li><li>第 1 章：部分空間の定義に「空でない」が必要（[[vector-space#def-subspace|部分空間]]）。</li><li>第 2 章：有限次元のノルムの同値性の証明で「$\mathbb{K}^n$」は「$\mathbb{K}^d$」（[[normed-space#thm-equiv-fin|定理]]）。</li><li>第 7 章：内積の公理 (ii) の右辺には複素共役が付く（[[hilbert-space#def-inner|内積]]）。第 9 章の内積の計算でも共役の横線が必要。</li><li>第 13 章：PDF の文字化けで $\ge$ が $\le$ と表示される箇所がある（$d(x,y)\ge0$、$N\ge1$、$k\ge N$）。</li><li>第 14 章：一点集合 $\{a\}$ が開集合でないのは $\mathbb{R}$ などの場合で、離散距離空間では開集合になる（[[open-closed#closed|注意]]）。</li><li>第 12 章：拡張定理で完備性が必要なのは値域 $Y$ だけ（[[extension-theorem#thm-extension|定理]]）。</li></ul>` },
     ],
   });
 })();

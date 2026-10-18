@@ -1,4 +1,4 @@
-/* ユークリッド空間（第 8 章）と距離空間（第 10 章：資料 付録 13〜17 章） */
+/* ユークリッド空間（第 8 章）と距離空間（第 10 章） */
 (function () {
   const R = String.raw;
   const A = window.ARTICLES;
@@ -43,7 +43,7 @@
     notation: [
       R`$n\in\mathbb{N}$。$\mathbb{R}^n:=\{x=(x_1,\dots,x_n)\mid x_j\in\mathbb{R}\ (1\le j\le n)\}$。成分 $x_j$ は実数。`,
       R`和とスカラー倍：$x+y:=(x_1+y_1,\dots,x_n+y_n)$、$\alpha x:=(\alpha x_1,\dots,\alpha x_n)$（$\alpha\in\mathbb{R}$）。$0:=(0,\dots,0)$。`,
-      R`内積 $x\cdot y:=\sum_{j=1}^nx_jy_j\in\mathbb{R}$。ノルム $\|x\|:=\sqrt{x\cdot x}=\bigl(\sum_{j=1}^nx_j^2\bigr)^{1/2}\ge0$（資料では $\|x\|_{\mathbb{R}^n}$ とも書く）。`,
+      R`内積 $x\cdot y:=\sum_{j=1}^nx_jy_j\in\mathbb{R}$。ノルム $\|x\|:=\sqrt{x\cdot x}=\bigl(\sum_{j=1}^nx_j^2\bigr)^{1/2}\ge0$。`,
       R`点列 $\{x^{(k)}\}_{k\in\mathbb{N}}\subset\mathbb{R}^n$：各 $k$ に $\mathbb{R}^n$ の点 $x^{(k)}=(x^{(k)}_1,\dots,x^{(k)}_n)$ を対応させたもの。添字 $k$ は右上にかっこ付きで書き、成分の番号 $j$ と区別する。`,
     ],
     synopsis: R`$\mathbb{R}^n$ では、内積 $x\cdot y$ からノルム（長さ）$\|x\|$ と距離 $\|x-y\|$ が定まり、コーシー＝シュワルツの不等式 $|x\cdot y|\le\|x\|\|y\|$ から三角不等式が出る。点列の収束・コーシー列・ボルツァーノ＝ワイエルシュトラスの定理は、すべて成分ごとの議論に帰着する。距離空間・ノルム空間・ヒルベルト空間は、ここでの性質を抜き出して一般化したものである。`,
@@ -54,7 +54,7 @@
       { t: 'proof', steps: [{ text: R`(1) $x\cdot x=\sum x_j^2$ は非負の数の和なので $\ge0$。和が $0$ なら各 $x_j^2=0$（非負の数の和が $0$ なら各項が $0$）なので $x=0$。逆は明らか。(2) $x_jy_j=y_jx_j$。(3) 有限和の[[sigma-notation#prop-sum-rules|線形性]]。` }] },
       { t: 'thm', id: 'thm-cs-rn', title: 'コーシー＝シュワルツの不等式', yomi: 'こーしー・しゅわるつのふとうしき', imp: 3, text: R`任意の $x,y\in\mathbb{R}^n$ について
 $$|x\cdot y|\le\|x\|\,\|y\|,\qquad\text{すなわち}\qquad\Bigl|\sum_{j=1}^nx_jy_j\Bigr|\le\Bigl(\sum_{j=1}^nx_j^2\Bigr)^{1/2}\Bigl(\sum_{j=1}^ny_j^2\Bigr)^{1/2}.$$` },
-      { t: 'strategy', text: R`$\alpha\in\mathbb{R}$ について $\|x+\alpha y\|^2\ge0$ が<em>つねに</em>成り立つ。これを $\alpha$ の 2 次式として展開し、最小になる $\alpha$ を代入する。資料と同じ方法で、[[hilbert-space#thm-cs|内積空間]]でもそのまま使える。` },
+      { t: 'strategy', text: R`$\alpha\in\mathbb{R}$ について $\|x+\alpha y\|^2\ge0$ が<em>つねに</em>成り立つ。これを $\alpha$ の 2 次式として展開し、最小になる $\alpha$ を代入する。同じ方法で、[[hilbert-space#thm-cs|内積空間]]でもそのまま使える。` },
       {
         t: 'proof',
         steps: [
@@ -148,7 +148,6 @@ $$\forall\varepsilon>0,\ \exists N=N(\varepsilon)\in\mathbb{N}\ \text{ s.t. }\ \
       { t: 'def', id: 'def-metric', title: '距離空間', yomi: 'きょりくうかん', imp: 3, text: R`$X\ne\emptyset$ を集合とする。写像 $d:X\times X\to\mathbb{R}$ が次の 3 条件をみたすとき、$d$ を $X$ 上の<b class="term">距離関数</b>（距離）という。
 <ol><li>（正値性）すべての $x,y\in X$ で $d(x,y)\ge0$。さらに $d(x,y)=0\iff x=y$。</li><li>（対称性）すべての $x,y\in X$ で $d(x,y)=d(y,x)$。</li><li>（三角不等式）すべての $x,y,z\in X$ で $d(x,z)\le d(x,y)+d(y,z)$。</li></ol>距離関数の定められた集合 $X$ を<b class="term">距離空間</b>といい、$(X,d)$ と書く。` },
       { t: 'note', title: '言い換え', text: R`(1) は「距離は $0$ 以上で、$0$ になるのは同じ点どうしだけ」、(2) は「行きと帰りの距離は同じ」、(3) は「寄り道すると近くはならない」。$\mathbb{R}^n$ のユークリッド距離はこの 3 つをすべてみたす（[[euclidean-space#cor-norm-rn|ノルムの性質]]より $d(x,y)=\|x-y\|$）。距離空間論は $\mathbb{R}^n$ をモデルにしている。` },
-      { t: 'rem', title: '資料の記号の誤植について', text: R`参考資料（解析学 IV）第 13 章の公理 (1) は PDF の文字化けで「$d(x,y)\le0$」と表示されることがあるが、正しくは $d(x,y)\ge0$ である（収束の定義の「$N\le1$」「$k\le N$」も、正しくは $N\ge1$、$k\ge N$）。` },
 
       { t: 'h2', id: 'examples', text: '距離空間の例' },
       { t: 'ex', id: 'ex-metric-r', title: 'ℝ と ℝⁿ', text: R`<ol><li>$\mathbb{R}$ に $d(x,y):=|x-y|$ を入れたもの。(3) は[[abs-triangle#cor-tri-dist|距離の三角不等式]]。</li><li>$\mathbb{R}^n$ に $d_2(x,y):=\|x-y\|=\bigl(\sum_j(x_j-y_j)^2\bigr)^{1/2}$ を入れたもの（ユークリッド距離）。</li><li>$\mathbb{R}^n$ に $d_1(x,y):=\sum_j|x_j-y_j|$、あるいは $d_\infty(x,y):=\max_j|x_j-y_j|$ を入れたもの。同じ集合でも距離の入れ方は一つではない。</li></ol>` },
@@ -285,7 +284,7 @@ $$\forall x\in U,\ \exists\varepsilon=\varepsilon(x)>0\ \text{ s.t. }\ N(x;\vare
     related: ['closure', 'metric-continuity'],
     notation: [
       R`$(X,d)$：距離空間。$A\subset X$：部分集合。$A^c=X\setminus A$。`,
-      R`$A^i$：$A$ の内部（資料の記号。interior の i）。多くの本では $A^\circ$ や $\operatorname{int}A$ と書く。`,
+      R`$A^i$：$A$ の内部（interior の i）。多くの本では $A^\circ$ や $\operatorname{int}A$ と書く。`,
       R`$A^e:=(A^c)^i$：外部（exterior の e）。$A^f$：境界（frontier の f）。多くの本では $\partial A$ と書く。`,
     ],
     synopsis: R`集合 $A$ に対して空間の各点は、「まわりの小さな球がまるごと $A$ に入る点（内点）」「まるごと $A$ の外に入る点（外点）」「どんな小さな球も $A$ と外の両方にかかる点（境界点）」のどれか一つに分類される。内部は $A$ に含まれる最大の開集合であり、境界はつねに閉集合である。`,
@@ -346,7 +345,7 @@ $$A^i:=\{x\in X\mid\exists\varepsilon>0:\ N(x;\varepsilon)\subset A\}$$
     related: ['normed-space', 'extension-theorem', 'metric-continuity'],
     notation: [
       R`$(X,d)$：距離空間。$A\subset X$。`,
-      R`$\overline{A}$：$A$ の閉包。資料の付録では $A^a$（adherent の a）と書く。関数解析の本編（資料第 2 章以降）では $\overline{A}$ を使う。`,
+      R`$\overline{A}$：$A$ の閉包。本によっては $A^a$（adherent の a）とも書く。`,
       R`$A^d$：$A$ の導集合（集積点全体。derive の d）。多くの本では $A'$ と書く。`,
       R`点列 $\{x_n\}\subset A$：すべての $n\in\mathbb{N}$ で $x_n\in A$ となる点列。`,
     ],

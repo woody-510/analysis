@@ -1,4 +1,4 @@
-/* 第 13 章：数列空間とヒルベルト空間（参考資料 解析学 IV 第 6〜9 章） */
+/* 第 13 章：数列空間とヒルベルト空間 */
 (function () {
   const R = String.raw;
   const A = window.ARTICLES;
@@ -26,7 +26,7 @@
   A.push({
     id: 'sequence-spaces',
     title: '数列空間 ℓᵖ',
-    sub: 'ヤング・ヘルダー・ミンコフスキーの不等式（資料 第 6 章）',
+    sub: 'ヤング・ヘルダー・ミンコフスキーの不等式',
     yomi: 'すうれつくうかん',
     aliases: ['数列空間', 'すうれつくうかん', 'lp', 'ℓp', 'エルピー', 'える', 'ヤングの不等式', 'やんぐ', 'ヘルダーの不等式', 'へるだー', 'Hölder', 'ミンコフスキーの不等式', 'みんこふすきー', '共役指数', 'きょうやくしすう', 'l∞'],
     kind: '定理',
@@ -47,10 +47,10 @@
       { t: 'lem', id: 'lem-young', title: 'ヤングの不等式', yomi: 'やんぐのふとうしき', imp: 3, text: R`$a,b\ge0$ とし、$1<p,q<\infty$ は $\frac1p+\frac1q=1$ をみたすとする。このとき
 $$ab\le\frac1pa^p+\frac1qb^q.$$
 等号は $a^p=b^q$ のときに限り成り立つ。` },
-      { t: 'fig', type: 'young', preset: 'p3', editable: true, caption: R`資料の証明のアイデア：曲線 $y=x^{p-1}$（すなわち $x=y^{q-1}$）の下側の面積 $S_1=\int_0^ax^{p-1}dx=\frac{a^p}p$（黄の斜線）と、左側の面積 $S_2=\int_0^by^{q-1}dy=\frac{b^q}q$（紺の斜線）を合わせると、長方形 $[0,a]\times[0,b]$（赤の破線）を覆う。$b=a^{p-1}$ のとき、ちょうど隙間なく覆う（等号）。` },
+      { t: 'fig', type: 'young', preset: 'p3', editable: true, caption: R`証明のアイデア：曲線 $y=x^{p-1}$（すなわち $x=y^{q-1}$）の下側の面積 $S_1=\int_0^ax^{p-1}dx=\frac{a^p}p$（黄の斜線）と、左側の面積 $S_2=\int_0^by^{q-1}dy=\frac{b^q}q$（紺の斜線）を合わせると、長方形 $[0,a]\times[0,b]$（赤の破線）を覆う。$b=a^{p-1}$ のとき、ちょうど隙間なく覆う（等号）。` },
       {
         t: 'proof',
-        sketch: R`図の面積比較が資料の証明である。ここでは、面積の議論を厳密にする代わりに、$b$ を固定した 1 変数関数の最小値を微分で求める。`,
+        sketch: R`図の面積比較が証明の核心である。ここでは、面積の議論を厳密にする代わりに、$b$ を固定した 1 変数関数の最小値を微分で求める。`,
         steps: [
           { text: R`<b>準備。</b>$\frac1p+\frac1q=1$ から $\frac1q=\frac{p-1}p$、すなわち $q=\frac p{p-1}$ で、$(p-1)(q-1)=(p-1)\cdot\frac1{p-1}=1$、また $p(q-1)=q$。` },
           { text: R`$a=0$ または $b=0$ なら左辺は $0$、右辺は $0$ 以上なので成り立つ（等号は $a=b=0$、すなわち $a^p=b^q=0$ のとき）。以下 $b>0$ を固定し、$\varphi(x):=\frac{x^p}p+\frac{b^q}q-bx$（$x\ge0$）とおく。` },
@@ -96,7 +96,7 @@ $$\sum_{k=1}^\infty|a_kb_k|\le\|a\|_{\ell^p}\|b\|_{\ell^q}.$$
       {
         t: 'proof',
         steps: [
-          { text: R`<b>$p=1$, $q=\infty$ の場合。</b>各 $k$ で $|a_kb_k|\le|a_k|\,\|b\|_{\ell^\infty}$。$k=1,\dots,n$ で足すと $\sum_{k=1}^n|a_kb_k|\le\|b\|_{\ell^\infty}\sum_{k=1}^n|a_k|\le\|a\|_{\ell^1}\|b\|_{\ell^\infty}$。正項級数の部分和が有界なので収束し（[[series#prop-positive|命題]]）、和も同じ値以下。$p=\infty$, $q=1$ は $a,b$ の役割を入れかえればよい。（資料では「明らか」とされている部分。）` },
+          { text: R`<b>$p=1$, $q=\infty$ の場合。</b>各 $k$ で $|a_kb_k|\le|a_k|\,\|b\|_{\ell^\infty}$。$k=1,\dots,n$ で足すと $\sum_{k=1}^n|a_kb_k|\le\|b\|_{\ell^\infty}\sum_{k=1}^n|a_k|\le\|a\|_{\ell^1}\|b\|_{\ell^\infty}$。正項級数の部分和が有界なので収束し（[[series#prop-positive|命題]]）、和も同じ値以下。$p=\infty$, $q=1$ は $a,b$ の役割を入れかえればよい。` },
           { text: R`<b>$1<p<\infty$ の場合。</b>$\|a\|_{\ell^p}=0$ なら $a=0$ で両辺 $0$。$\|b\|_{\ell^q}=0$ も同様。以下どちらも正とする。` },
           {
             text: R`各 $k$ で、[[sequence-spaces#lem-young|ヤングの不等式]]を $\frac{|a_k|}{\|a\|_{\ell^p}},\ \frac{|b_k|}{\|b\|_{\ell^q}}\ (\ge0)$ に使うと`,
@@ -127,7 +127,6 @@ $$\sum_{k=1}^\infty|a_kb_k|\le\|a\|_{\ell^p}\|b\|_{\ell^q}.$$
           { text: R`ノルムの (i)：$\|a\|_{\ell^p}=0\iff$ すべての $a_k=0$。(ii)：$\|\alpha a\|_{\ell^p}=(|\alpha|^p\sum|a_k|^p)^{1/p}=|\alpha|\|a\|_{\ell^p}$。(iii) が今示した不等式。` },
         ],
       },
-      { t: 'rem', title: '資料の証明との違い', text: R`資料は無限和のまま $\|a+b\|^p\le(\|a\|+\|b\|)\|a+b\|^{p-1}$ と計算し、両辺を $\|a+b\|^{p-1}$ で割っている。これは $\|a+b\|_{\ell^p}<\infty$（[[sequence-spaces#prop-lp-vs|$\ell^p$ が線形空間であること]]）を先に示してあるから正当化される。上の証明は有限和 $T_n$ で計算してから極限をとることで、その確認を不要にしている。` },
       { t: 'fig', type: 'lpball', preset: 'p4', caption: R`$\mathbb{R}^2$ での $\|x\|_p=(|x_1|^p+|x_2|^p)^{1/p}$ の単位球。$p\ge1$ ならつねに凸で、これがミンコフスキーの不等式（三角不等式）の幾何的な意味である。$p<1$ ではへこんで凸でなくなり、ノルムにならない。` },
 
       { t: 'h2', id: 'complete', text: 'ℓᵖ の完備性' },
@@ -163,7 +162,7 @@ $$\sum_{k=1}^\infty|a_kb_k|\le\|a\|_{\ell^p}\|b\|_{\ell^q}.$$
   A.push({
     id: 'hilbert-space',
     title: 'ヒルベルト空間',
-    sub: '内積・コーシー＝シュワルツ・中線定理（資料 第 7 章）',
+    sub: '内積・コーシー＝シュワルツ・中線定理',
     yomi: 'ひるべるとくうかん',
     aliases: ['ヒルベルト空間', 'ひるべるとくうかん', 'Hilbert', '内積空間', 'ないせきくうかん', '内積', 'ないせき', 'コーシー・シュワルツの不等式', 'しゅわるつ', '中線定理', 'ちゅうせんていり', '平行四辺形の法則', 'l2', 'ℓ2'],
     kind: '用語',
@@ -184,7 +183,7 @@ $$\sum_{k=1}^\infty|a_kb_k|\le\|a\|_{\ell^p}\|b\|_{\ell^q}.$$
       { t: 'p', text: R`$\mathbb{R}^n$ の任意のベクトルは、正規直交基底 $e_1,\dots,e_n$ を使って $x=\sum_{j=1}^n(x,e_j)e_j$ と書ける。内積があると、こうした「向き」に関する幾何学的な性質を表現できる。無限次元の空間にも内積という構造を入れると都合がよい、というのがヒルベルト空間を考える動機である。` },
       { t: 'def', id: 'def-inner', title: '内積・内積空間', yomi: 'ないせき', imp: 3, text: R`$\mathbb{K}$ 上の線形空間 $X$ について、次の (i)〜(iv) をみたす写像 $(\cdot,\cdot)_X:X\times X\to\mathbb{K}$ を<b class="term">内積</b>という。
 <ol type="i"><li>$(f,f)_X\ge0$（特に実数）、かつ $(f,f)_X=0\iff f=0$（$f\in X$）。</li><li>$(f,g)_X=\overline{(g,f)_X}$（$f,g\in X$）。</li><li>$(f_1+f_2,g)_X=(f_1,g)_X+(f_2,g)_X$（$f_1,f_2,g\in X$）。</li><li>$(\alpha f,g)_X=\alpha(f,g)_X$（$\alpha\in\mathbb{K}$, $f,g\in X$）。</li></ol>内積の定義された線形空間を<b class="term">内積空間</b>という。` },
-      { t: 'rem', title: '資料の (ii) の横線について', text: R`資料の PDF では (ii) が $(f,g)_X=(g,f)_X$ と表示されることがあるが、複素数の場合は右辺に複素共役の横線が付く（$\overline{(g,f)}$）。横線がないと、$\mathbb{K}=\mathbb{C}$ で (i)(iv) と矛盾する：$(if,if)=i(f,if)=i\,\overline{(if,f)}=i\cdot\overline{i(f,f)}=i\cdot(-i)(f,f)=(f,f)$ となるのは共役を付けたときで、付けないと $(if,if)=i^2(f,f)=-(f,f)\le0$ になってしまう。` },
+      { t: 'rem', title: '(ii) の複素共役について', text: R`複素数の場合、(ii) の右辺には複素共役の横線が付く（$\overline{(g,f)}$）。横線がないと $\mathbb{K}=\mathbb{C}$ で (i)(iv) と矛盾する：共役を付けると、(iv) と (ii) から $(if,if)=i(f,if)=i\,\overline{(if,f)}=i\cdot\overline{i(f,f)}=i\cdot(-i)(f,f)=(f,f)\ge0$ となって正しく、付けないと $(if,if)=i^2(f,f)=-(f,f)\le0$ になってしまう。` },
       { t: 'prop', id: 'prop-inner-conj', title: '第 2 変数については共役線形', yomi: 'きょうやくせんけい', imp: 2, text: R`内積空間で、$f,g,g_1,g_2\in X$、$\alpha\in\mathbb{K}$ について $(f,g_1+g_2)=(f,g_1)+(f,g_2)$、$(f,\alpha g)=\overline\alpha(f,g)$、$(f,0)=(0,f)=0$。` },
       { t: 'proof', steps: [{ text: R`(ii)(iii)(ii) の順に使って $(f,g_1+g_2)=\overline{(g_1+g_2,f)}=\overline{(g_1,f)+(g_2,f)}=\overline{(g_1,f)}+\overline{(g_2,f)}=(f,g_1)+(f,g_2)$。同様に $(f,\alpha g)=\overline{(\alpha g,f)}=\overline{\alpha(g,f)}=\overline\alpha\,\overline{(g,f)}=\overline\alpha(f,g)$。$(0,f)=(0\cdot0,f)=0\cdot(0,f)=0$（(iv)）、$(f,0)=\overline{(0,f)}=0$。` }] },
       { t: 'def', id: 'def-inner-norm', title: '内積から定まるノルム', yomi: 'ないせきからさだまるのるむ', imp: 2, text: R`内積空間 $X$ において $\|f\|_X:=\sqrt{(f,f)_X}$（$f\in X$）と定める。（これがノルムであることは、次の不等式のあとで示す。）` },
@@ -220,7 +219,7 @@ $$\sum_{k=1}^\infty|a_kb_k|\le\|a\|_{\ell^p}\|b\|_{\ell^q}.$$
       },
       { t: 'prop', id: 'prop-inner-cont', title: '内積の連続性', yomi: 'ないせきのれんぞくせい', imp: 2, text: R`内積空間で $f_k\to f$、$g_k\to g$ ならば $(f_k,g_k)\to(f,g)$。特に、$g$ を固定すると $(f_k,g)\to(f,g)$。` },
       { t: 'proof', steps: [{ text: R`$(f_k,g_k)-(f,g)=(f_k-f,g_k)+(f,g_k-g)$ なので、コーシー＝シュワルツより $|(f_k,g_k)-(f,g)|\le\|f_k-f\|\|g_k\|+\|f\|\|g_k-g\|$。$\{g_k\}$ は収束列なので $\|g_k\|$ は有界（$\|g_k\|\le\|g_k-g\|+\|g\|$）で、右辺は $0$ に収束する。` }] },
-      { t: 'note', title: '「極限と内積は入れかえてよい」', text: R`この命題は、後の章で何度も使う：$\left(\sum_{j=1}^\infty\alpha_jf_j,\ g\right)=\sum_{j=1}^\infty\alpha_j(f_j,g)$（部分和の極限と内積の交換）。資料の脚注「内積の連続性を用いた」はこれのことである。` },
+      { t: 'note', title: '「極限と内積は入れかえてよい」', text: R`この命題は、後の章で何度も使う：$\left(\sum_{j=1}^\infty\alpha_jf_j,\ g\right)=\sum_{j=1}^\infty\alpha_j(f_j,g)$（部分和の極限と内積の交換）。` },
 
       { t: 'h2', id: 'hilbert', text: 'ヒルベルト空間' },
       { t: 'def', id: 'def-hilbert', title: 'ヒルベルト空間', yomi: 'ひるべるとくうかん', imp: 3, text: R`内積空間 $X$ が、ノルム $\|f\|_X=\sqrt{(f,f)_X}$ に関して完備であるとき、$X$ を<b class="term">ヒルベルト空間</b>という。ヒルベルト空間は特にバナッハ空間である。` },
@@ -245,7 +244,7 @@ $$\|f+g\|_X^2+\|f-g\|_X^2=2\bigl(\|f\|_X^2+\|g\|_X^2\bigr).$$` },
   A.push({
     id: 'projection-theorem',
     title: '射影定理',
-    sub: '直交補空間・最近点・直交分解（資料 第 8 章）',
+    sub: '直交補空間・最近点・直交分解',
     yomi: 'しゃえいていり',
     aliases: ['射影定理', 'しゃえいていり', '直交', 'ちょっこう', '直交補空間', 'ちょっこうほくうかん', '直和', 'ちょくわ', '正射影', 'せいしゃえい', '直交射影', 'ちょっこうしゃえい', '最近点', 'さいきんてん', 'ピタゴラスの定理'],
     kind: '定理',
@@ -329,7 +328,7 @@ $$f=g+h\qquad(g\in L,\ h\in L^\perp)$$
   A.push({
     id: 'orthonormal-system',
     title: '正規直交系と完全正規直交系',
-    sub: 'ベッセルの不等式・パーセバルの等式（資料 第 9 章）',
+    sub: 'ベッセルの不等式・パーセバルの等式',
     yomi: 'せいきちょっこうけい',
     aliases: ['正規直交系', 'せいきちょっこうけい', '完全正規直交系', 'かんぜんせいきちょっこうけい', 'CONS', 'ONS', '正規直交基底', 'ベッセルの不等式', 'べっせる', 'パーセバルの等式', 'ぱーせばる', 'フーリエ係数', 'ふーりえけいすう', 'グラム・シュミット', 'ぐらむしゅみっと', '直交化'],
     kind: '定理',
@@ -339,7 +338,7 @@ $$f=g+h\qquad(g\in L,\ h\in L^\perp)$$
     prereq: ['projection-theorem', 'hilbert-space', 'series'],
     related: ['fourier-series', 'sobolev'],
     notation: [
-      R`$X$：内積空間（多くの定理ではヒルベルト空間）。$\{f_k\}_{k=1}^\infty\subset X$：番号の付いた元の列（資料と同じく可算個の系を扱う）。`,
+      R`$X$：内積空間（多くの定理ではヒルベルト空間）。$\{f_k\}_{k=1}^\infty\subset X$：番号の付いた元の列（ここでは可算個の系を扱う）。`,
       R`$\delta_{jm}$：[[sigma-notation#def-kronecker|クロネッカーのデルタ]]。正規直交系は $(f_j,f_m)=\delta_{jm}$ と書ける。`,
       R`$(f,f_k)_X$：$f$ の $f_k$ 方向の<b>フーリエ係数</b>。$\alpha_j:=(f,f_j)$ と略記することがある。`,
       NOTE_CONJ,
@@ -364,7 +363,7 @@ $$\Bigl(\sum_{j=1}^n\alpha_jf_j,\ \sum_{m=1}^n\beta_mf_m\Bigr)_X=\sum_{j=1}^n\al
               [R`\phantom{\Bigl(\sum\alpha_jf_j,\sum\beta_mf_m\Bigr)}=\sum_{j=1}^n\alpha_j\sum_{m=1}^n\overline{\beta_m}\delta_{jm}=\sum_{j=1}^n\alpha_j\overline{\beta_j}.`, R`正規直交性・$\sum_m\overline{\beta_m}\delta_{jm}=\overline{\beta_j}$`],
             ],
           },
-          { text: R`$\beta_j=\alpha_j$ とすれば $\alpha_j\overline{\alpha_j}=|\alpha_j|^2$ より後半。（資料の式では共役の横線が表示されていないことがあるが、$\mathbb{K}=\mathbb{C}$ では必要である。）` },
+          { text: R`$\beta_j=\alpha_j$ とすれば $\alpha_j\overline{\alpha_j}=|\alpha_j|^2$ より後半。（$\mathbb{K}=\mathbb{C}$ では必要である。）` },
         ],
       },
 
@@ -381,7 +380,7 @@ $$\sum_{k=1}^\infty|(f,f_k)_X|^2\le\|f\|_X^2.$$` },
               [R`\phantom{0}=\|f\|^2-\sum_{j=1}^n|\alpha_j|^2-\sum_{j=1}^n|\alpha_j|^2+\sum_{j=1}^n|\alpha_j|^2=\|f\|^2-\sum_{j=1}^n|\alpha_j|^2.`, R`$(f,f_j)=\alpha_j$、$(f_j,f)=\overline{\alpha_j}$`],
             ],
           },
-          { text: R`よって $\sum_{j=1}^n|\alpha_j|^2\le\|f\|^2$。左辺は正項級数の部分和で、上に有界なので収束し（資料の脚注：上に有界な単調増加列は収束する。[[monotone-convergence#thm-mct|単調収束定理]]）、和も $\|f\|^2$ 以下。` },
+          { text: R`よって $\sum_{j=1}^n|\alpha_j|^2\le\|f\|^2$。左辺は正項級数の部分和で、上に有界なので収束し（[[monotone-convergence#thm-mct|単調収束定理]]）、和も $\|f\|^2$ 以下。` },
         ],
       },
       { t: 'note', title: '意味', text: R`$\sum_{j=1}^n\alpha_jf_j$ は $f$ を $f_1,\dots,f_n$ の方向に分解した成分の和で、計算の途中で $\|f-\sum\alpha_jf_j\|^2=\|f\|^2-\sum|\alpha_j|^2$ を得た。「影の長さの 2 乗の合計は、元の長さの 2 乗を超えない」。等号（パーセバルの等式）が成り立つかどうかが、正規直交系が「十分たくさんあるか（完全か）」の判定になる。` },
@@ -420,7 +419,6 @@ $$f=\sum_{k=1}^\infty(f,f_k)_Xf_k\qquad(X\text{ のノルムで収束})$$
           { text: R`<b>(v)⇒(ii)</b>：$f\in L^\perp$ なら、特に $f_k\in L$ と直交するので $(f,f_k)=0$（すべての $k$）。(v) より $f=0$。よって $L^\perp=\{0\}$ で、[[projection-theorem#cor-perp-zero|射影定理の系]]より $L=X$。` },
         ],
       },
-      { t: 'note', title: '資料の「明らか」の中身', text: R`資料は (iv)⇒(iii) と (iii)⇒(v) を「明らか」としている。上のとおり、前者は $f'=f$ を代入すること、後者はノルムが $0$ なら元が $0$（内積の公理 (i)）であることだけを使っている。` },
       { t: 'ex', id: 'ex-cons-l2', title: 'ℓ² の標準的な完全正規直交系', text: R`$\ell^2$ の $\{e^{(j)}\}$ は完全正規直交系である。$a\in\ell^2$ について $(a,e^{(j)})=a_j$ なので、(v) の「すべての $j$ で $a_j=0$ なら $a=0$」は明らか。展開 $a=\sum_ja_je^{(j)}$ は、$\|a-\sum_{j\le n}a_je^{(j)}\|_{\ell^2}^2=\sum_{j>n}|a_j|^2\to0$（[[series#prop-tail|残りは 0 に収束]]）という意味である。` },
       { t: 'ex', id: 'ex-cons-fourier', title: '三角関数系', text: R`$\{\frac1{\sqrt{2\pi}}e^{ikx}\}_{k\in\mathbb{Z}}$ は $L^2(-\pi,\pi)$ の完全正規直交系である（証明には[[closure#ex-dense|稠密性]]の議論が必要。[[fourier-series|フーリエ級数]]の記事を参照）。パーセバルの等式を $f(x)=x$ に使うと $\sum_{n=1}^\infty\frac1{n^2}=\frac{\pi^2}6$ が得られる。` },
       { t: 'fig', type: 'fourier', preset: 'sq', editable: true, caption: R`矩形波 $\operatorname{sign}x$ のフーリエ部分和 $S_N$。$N$ を増やすと、誤差 $\|f-S_N\|_2^2=\|f\|^2-\sum_{|k|\le N}|(f,e_k)|^2$（ベッセルの計算）が $0$ に近づく。これがパーセバルの等式の意味である。跳びの近くの「はみ出し」（ギブズ現象）は消えないが、その幅が細くなるので $L^2$ ノルムでは $0$ に近づく。` },
