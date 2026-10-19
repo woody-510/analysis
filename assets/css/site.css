@@ -397,3 +397,5 @@ svg .gap{stroke:var(--accent);stroke-width:3}
   .pdf-head{display:flex!important;justify-content:space-between;font-family:var(--f-ui);font-size:8pt;color:#666;border-bottom:.5pt solid #999;padding-bottom:2pt;margin-bottom:8pt}
 }
 .pdf-head{display:none}
+
+.modal a.pbtn.dl{display:inline-block;text-decoration:none;text-align:center;background:#8c1c13;color:#fff;border-color:#8c1c13;padding:10px 16px;font-size:14px;font-weight:600}

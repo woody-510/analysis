@@ -431,8 +431,16 @@
     </div></div>`;
     }
     const saved = store.get('pdf', {});
+    const chNo = params.get('ch'), aid = params.get('id');
+    let dl = '';
+    if (chNo != null && chNo !== '') {
+      const c = BOOK.find((x) => String(x.no) === String(chNo));
+      if (c) dl = `<a class="pbtn dl" href="pdf/ch${String(c.no).padStart(2, '0')}.pdf" download="第${c.no}章_${esc(c.title)}.pdf">⬇ PDF をダウンロード</a>`;
+    } else if (aid && byId[aid]) {
+      dl = `<a class="pbtn dl" href="pdf/a/${esc(aid)}.pdf" download="${esc(byId[aid].title)}.pdf">⬇ PDF をダウンロード</a>`;
+    }
     return `<div class="modal-ov" id="pdfmodal"><div class="modal" role="dialog" aria-label="PDF 出力の設定">
-      <h3>PDF で保存</h3><p class="d">${esc(what)} を A4 で出力します。含める項目を選んでください。印刷画面で「送信先：PDF に保存」を選ぶとファイルになります。</p>
+      <h3>PDF で保存</h3>${dl ? `<p class="d">${esc(what)} の PDF（標準設定：ヒント・解答は含まない）をそのままダウンロードできます。</p><div class="row">${dl}</div><p class="d" style="margin-top:14px">含める項目を自分で選びたいときは、下で選んで「印刷 / PDF に保存」を押してください（印刷画面で「PDF に保存」を選びます）。</p>` : `<p class="d">${esc(what)} を A4 で出力します。</p>`}
       <div class="opts">${PDF_OPTS.map(([k, t, d]) => `<label><input type="checkbox" data-opt="${k}"${(saved[k] ?? d) ? ' checked' : ''}>${t}</label>`).join('')}</div>
       <div class="row"><button type="button" class="pbtn js-cancel">キャンセル</button><button type="button" class="pbtn js-print" style="background:#1a1a1a;color:#fff;border-color:#1a1a1a">印刷 / PDF に保存</button></div>
     </div></div>`;
@@ -451,7 +459,7 @@
       if (e.target.closest('.js-print')) {
         const o = read(); store.set('pdf', o); applyPdfOpts(o);
         m.classList.remove('show');
-        setTimeout(() => window.print(), 60);
+        window.print();
       }
     });
     m.addEventListener('change', () => applyPdfOpts(read()));
