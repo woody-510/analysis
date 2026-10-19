@@ -33,6 +33,7 @@
 
   /* ---------------- 数式とリンク ---------------- */
   let PAGE = { mode: 'dict', inPage: new Set() };
+  let onDrawer = null; // 並べて表示では、☰ で表示中の側の目次を開く
 
   function tex(src, display, ctx) {
     if (src.includes('\\tag{#}')) src = ctx ? src.replace('\\tag{#}', '\\tag{' + ctx.eq() + '}') : src.replace('\\tag{#}', '');
@@ -377,19 +378,18 @@
     attachSuggest(inp, hd.querySelector('.suggest'));
     hd.querySelector('.js-msearch').addEventListener('click', () => { hd.classList.add('searching'); inp.focus(); });
     inp.addEventListener('blur', () => setTimeout(() => hd.classList.remove('searching'), 150));
-    const dr = hd.querySelector('.js-drawer');
-    dr.addEventListener('click', () => document.documentElement.classList.toggle('drawer'));
   }
 
   /* ---------------- 目次・スクロール追従 ---------------- */
   function tocHTML(toc, title) {
     return `<div class="toc-h">${esc(title || '目次')}</div><ol>${toc.map((s) => `<li><a href="#${s.id}" data-spy="${s.id}"><span class="lbl">${s.label}</span>${esc(s.title)}</a>${s.children.length ? `<ol>${s.children.map((c) => `<li><a href="#${c.id}" data-spy="${c.id}"><span class="lbl">${c.label}</span>${rich(c.title)}</a></li>`).join('')}</ol>` : ''}</li>`).join('')}</ol>`;
   }
-  function tocTools(withPdf) {
-    return `<div class="toc-tools"><button type="button" class="js-open-proofs">証明をすべて開く</button><button type="button" class="js-open-notes">メモをすべて開く</button><button type="button" class="js-open-qa">Q&amp;A をすべて開く</button><button type="button" class="js-close-all">すべて閉じる</button>${withPdf ? '<button type="button" class="js-pdf">PDF で保存</button><button type="button" class="js-split">並べて表示</button>' : ''}</div>`;
+  function tocTools(withSplit) {
+    return `<div class="toc-tools"><button type="button" class="js-open-proofs">証明をすべて開く</button><button type="button" class="js-open-notes">メモをすべて開く</button><button type="button" class="js-open-qa">Q&amp;A をすべて開く</button><button type="button" class="js-close-all">すべて閉じる</button>${withSplit && !EMBED ? '<button type="button" class="js-split m-only">並べて表示</button>' : ''}</div>`;
   }
   function bindTocTools() {
     document.addEventListener('click', (e) => {
+      if (e.target.closest('.js-drawer')) { if (onDrawer) onDrawer(); else document.documentElement.classList.toggle('drawer'); return; }
       if (e.target.closest('.js-open-proofs')) setAll('.proof-ctl [data-tg]', true);
       if (e.target.closest('.js-open-notes')) setAll('.note-h[data-tg]', true);
       if (e.target.closest('.js-open-qa')) setAll('.qa-q[data-tg]', true);
@@ -497,7 +497,7 @@
       }
     });
   }
-  const mtocHTML = (toc) => `<nav class="m-tocbar" aria-label="節">${toc.map((s) => `<a href="#${s.id}" data-spy="${s.id}">${s.label} ${esc(s.title)}</a>`).join('')}</nav>`;
+  const mtocHTML = (toc) => `<nav class="m-tocbar" aria-label="節">${EMBED ? '<button type="button" class="m-tocbtn js-drawer">☰ 目次</button>' : ''}${toc.map((s) => `<a href="#${s.id}" data-spy="${s.id}">${s.label} ${esc(s.title)}</a>`).join('')}</nav>`;
 
   /* ================= 記事ページ ================= */
   function articlePage() {
@@ -589,7 +589,6 @@
       </article>
       <aside class="rel">
         <div class="rel-sec"><div class="rel-h">章の一覧</div>${BOOK.map((x) => (x.sections.length ? `<a href="book.html?ch=${x.no}"${x.no === no ? ' style="font-weight:700;color:var(--accent)"' : ''}>第 ${x.no} 章　${esc(x.title)}</a>` : `<span style="display:block;color:var(--muted);padding:2px 0">第 ${x.no} 章　${esc(x.title)}（準備中）</span>`)).join('')}</div>
-        <div class="rel-sec"><div class="rel-h">この章を 1 冊の PDF に</div><button type="button" class="btn dark js-pdf" style="width:100%">PDF で保存</button></div>
       </aside>
     </div>`;
     app.innerHTML = shell('chapter', cur, main, { mtoc: mtocHTML(toc), modal: pdfModalHTML('「' + title + '」') });
@@ -663,7 +662,7 @@
   function roadmapPage() {
     const app = document.getElementById('app');
     document.title = 'ロードマップ — ' + SITE.jp;
-    const later = [['今後の予定', ['偏微分・全微分（第 8 章）', '重積分（第 9 章）', '位相空間', '複素解析', 'スペクトル理論']]];
+    const later = [['今後の予定', ['位相空間', '複素解析', 'スペクトル理論']]];
     const grades = [...new Set(BOOK.map((c) => c.grade))];
     const main = `<div class="page-wrap"><h1 class="title">ロードマップ</h1><p class="lead ui">学部 1 年から研究の入口まで、学ぶ順番の地図です。色の付いた章は読めます。</p>
       <div class="road">${grades.map((g) => `<div class="road-row"><div class="road-g ui">${esc(g)}</div><div class="road-nodes">${BOOK.filter((c) => c.grade === g).map((c) => `<a class="node${c.sections.length ? '' : ' off'}" href="${c.sections.length ? 'book.html?ch=' + c.no : '#'}"><span class="gl">${esc(c.glyph)}</span><span class="nt">第 ${c.no} 章<br><b>${esc(c.title)}</b></span></a>`).join('<span class="arr">→</span>')}</div></div>`).join('')}
@@ -680,6 +679,12 @@
     const pane = (side, src) => `<div class="pane" data-side="${side}"><div class="pane-bar ui"><span class="side">${side === 'l' ? '左' : '右'}</span><div class="hsearch pane-search"><span class="mag">⌕</span><input type="search" placeholder="表示するページを検索" autocomplete="off"><div class="suggest"></div></div></div>${src ? `<iframe src="${esc(src)}${src.includes('?') ? '&' : '?'}embed=1" title="${side}"></iframe>` : '<div class="pane-empty ui">上の欄で、並べて表示するページを検索してください。</div>'}</div>`;
     const main = `<div class="split-switch ui"><button type="button" data-s="l" class="on">左のページ</button><button type="button" data-s="r">右のページ</button></div><div class="split" data-show="l">${pane('l', L)}${pane('r', Rr)}</div>`;
     app.innerHTML = shell('', 'split', main);
+    onDrawer = () => {
+      const p = app.querySelector('.pane[data-side="' + app.querySelector('.split').dataset.show + '"]');
+      const f = p.querySelector('iframe');
+      if (!f) { p.querySelector('input').focus(); return; }
+      try { f.contentDocument.documentElement.classList.toggle('drawer'); } catch (err) { /* 読み込み中 */ }
+    };
     common('split');
     app.querySelectorAll('.pane').forEach((p) => {
       attachSuggest(p.querySelector('input'), p.querySelector('.suggest'), {

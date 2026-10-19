@@ -71,7 +71,7 @@ a.node:not(.off):hover{box-shadow:0 6px 16px rgba(60,50,20,.12)}
 .arr{color:var(--muted)}
 
 /* ---------- 並べて表示 ---------- */
-.split{display:grid;grid-template-columns:1fr 1fr;height:calc(100vh - var(--hdr-h) - var(--tabs-h))}
+.split{display:grid;grid-template-columns:1fr 1fr;height:calc(100vh - var(--hdr-h) - var(--tabs-h));height:calc(100dvh - var(--hdr-h) - var(--tabs-h))}
 .pane{display:flex;flex-direction:column;min-width:0;border-right:1px solid var(--rule)}
 .pane-bar{display:flex;align-items:center;gap:10px;padding:6px 10px;border-bottom:1px solid var(--rule);background:#f4efe0}
 .pane-bar .side{font-weight:700;font-size:12px;width:20px;text-align:center;color:var(--accent)}
@@ -85,12 +85,12 @@ html.embed .layout{grid-template-columns:200px minmax(0,1fr)}
 html.embed aside.rel{display:none}
 html.embed .m-tocbar{top:0}
 @media (max-width:760px){
-  .split{grid-template-columns:1fr;height:calc(100vh - var(--hdr-h) - 40px)}
+  .split{grid-template-columns:1fr;height:calc(100vh - var(--hdr-h) - 40px);height:calc(100dvh - var(--hdr-h) - 40px)}
   .split[data-show="l"] .pane[data-side="r"],.split[data-show="r"] .pane[data-side="l"]{display:none}
   .split-switch{display:flex;gap:0;border-bottom:1px solid var(--rule)}
   .split-switch button{flex:1;height:40px;border:0;background:var(--paper);font-size:13px;border-bottom:2px solid transparent}
   .split-switch button.on{border-color:var(--accent);color:var(--accent);font-weight:700}
-  .pane-search{display:block;position:static}
+  .pane-search{display:block;position:relative;left:auto;right:auto;top:auto}
   html.embed .layout{display:block}
 }
 
