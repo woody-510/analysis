@@ -430,45 +430,38 @@
       <div class="row"><button type="button" class="pbtn js-cancel">閉じる</button></div>
     </div></div>`;
     }
-    const saved = store.get('pdf', {});
-    const chNo = params.get('ch'), aid = params.get('id');
-    let dl = '';
-    if (chNo != null && chNo !== '') {
-      const c = BOOK.find((x) => String(x.no) === String(chNo));
-      if (c) dl = `<a class="pbtn dl" href="pdf/ch${String(c.no).padStart(2, '0')}.pdf" download="第${c.no}章_${esc(c.title)}.pdf">⬇ PDF をダウンロード</a>`;
-    } else if (aid && byId[aid]) {
-      dl = `<a class="pbtn dl" href="pdf/a/${esc(aid)}.pdf" download="${esc(byId[aid].title)}.pdf">⬇ PDF をダウンロード</a>`;
-    }
-    return `<div class="modal-ov" id="pdfmodal"><div class="modal" role="dialog" aria-label="PDF 出力の設定">
-      <h3>PDF で保存</h3>${dl ? `<p class="d">${esc(what)} の PDF（標準設定：ヒント・解答は含まない）をそのままダウンロードできます。</p><div class="row">${dl}</div><p class="d" style="margin-top:14px">含める項目を自分で選びたいときは、下で選んで「印刷 / PDF に保存」を押してください（印刷画面で「PDF に保存」を選びます）。</p>` : `<p class="d">${esc(what)} を A4 で出力します。</p>`}
-      <div class="opts">${PDF_OPTS.map(([k, t, d]) => `<label><input type="checkbox" data-opt="${k}"${(saved[k] ?? d) ? ' checked' : ''}>${t}</label>`).join('')}</div>
-      <div class="row"><button type="button" class="pbtn js-cancel">キャンセル</button><button type="button" class="pbtn js-print" style="background:#1a1a1a;color:#fff;border-color:#1a1a1a">印刷 / PDF に保存</button></div>
-    </div></div>`;
+    return '';
   }
   function applyPdfOpts(opts) {
     PDF_OPTS.forEach(([k]) => document.body.classList.toggle('p-no-' + k, !opts[k]));
   }
+  /* 通常版：「PDF」ボタンは、あらかじめ作ってある PDF をそのままダウンロードする */
+  function pdfFile() {
+    const chNo = params.get('ch'), aid = params.get('id');
+    if (chNo != null && chNo !== '') {
+      const c = BOOK.find((x) => String(x.no) === String(chNo));
+      if (c) return { href: 'pdf/ch' + String(c.no).padStart(2, '0') + '.pdf', name: '第' + c.no + '章_' + c.title + '.pdf' };
+    } else if (aid && byId[aid]) return { href: 'pdf/a/' + aid + '.pdf', name: byId[aid].title + '.pdf' };
+    return null;
+  }
   function bindPdf() {
-    const m = document.getElementById('pdfmodal');
-    if (!m) return;
-    const read = () => { const o = {}; m.querySelectorAll('[data-opt]').forEach((c) => (o[c.dataset.opt] = c.checked)); return o; };
-    if (!HOSTED) applyPdfOpts(read());
-    document.addEventListener('click', (e) => {
-      if (e.target.closest('.js-pdf')) { m.classList.add('show'); document.documentElement.classList.remove('drawer'); }
-      if (e.target.closest('.js-cancel') || e.target === m) m.classList.remove('show');
-      if (e.target.closest('.js-print')) {
-        const o = read(); store.set('pdf', o); applyPdfOpts(o);
-        m.classList.remove('show');
-        window.print();
-      }
-    });
-    m.addEventListener('change', () => applyPdfOpts(read()));
-    // ?print=sketch,full,... で設定して自動で開く（確認用）
-    if (params.get('pdf')) {
-      const want = new Set(params.get('pdf').split(','));
-      const o = {}; PDF_OPTS.forEach(([k]) => (o[k] = want.has(k)));
+    // 印刷（PDF 書き出し）時の標準設定：ヒント・解答・「なぜ？」は含めない
+    if (!HOSTED) {
+      const o = {}; PDF_OPTS.forEach(([k, , d]) => (o[k] = d));
+      if (params.get('pdf')) { const want = new Set(params.get('pdf').split(',')); PDF_OPTS.forEach(([k]) => (o[k] = want.has(k))); }
       applyPdfOpts(o);
     }
+    const m = document.getElementById('pdfmodal');
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.js-pdf')) return;
+      document.documentElement.classList.remove('drawer');
+      if (HOSTED) { if (m) m.classList.add('show'); return; }
+      const f = pdfFile();
+      if (!f) return;
+      const a = document.createElement('a');
+      a.href = f.href; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+    });
+    if (m) m.addEventListener('click', (e) => { if (e.target.closest('.js-cancel') || e.target === m) m.classList.remove('show'); });
   }
 
   /* ---------------- 共通の骨組み ---------------- */
